@@ -69,5 +69,4 @@ public class Store {
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
     }
-
 }
