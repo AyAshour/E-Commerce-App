@@ -1,0 +1,7 @@
+package com.swe.project.repository;
+
+import com.swe.project.entity.Store;
+import org.springframework.data.repository.CrudRepository;
+
+public interface StoreRepository extends CrudRepository<Store, Integer> {
+}
