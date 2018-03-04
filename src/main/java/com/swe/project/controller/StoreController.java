@@ -25,6 +25,7 @@ public class StoreController {
     }
 
     @PostMapping("/acceptStore")
+    @Transactional
     public String acceptStore(@RequestParam Integer id){
         Store targetStore = storeRepo.findStoreById(id);
         targetStore.setAccepted(true);
