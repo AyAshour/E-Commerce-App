@@ -14,12 +14,14 @@ public class Store {
     private String name;
     private String type;
     private String location;
+    private String ownerUsername;
     private boolean accepted;
 
-    public Store(String name, String type, String location) {
+    public Store(String name, String type, String location, String ownerUsername) {
         this.name = name;
         this.type = type;
         this.location = location;
+        this.ownerUsername = ownerUsername;
         this.accepted = false;
     }
 
@@ -27,6 +29,7 @@ public class Store {
         this.name = "";
         this.type = "";
         this.location = "";
+        this.ownerUsername = "";
         this.accepted = false;
     }
 
@@ -60,6 +63,14 @@ public class Store {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
     }
 
     public boolean isAccepted() {
