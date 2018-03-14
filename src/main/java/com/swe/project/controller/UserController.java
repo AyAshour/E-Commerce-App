@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
+
 public class UserController {
     @Autowired
     private UserRepository userRepo;
@@ -18,7 +19,7 @@ public class UserController {
         if(userRepo.existsByEmail(email))
             return "user already exist!";
 
-        userRepo.save(new User(false, email, username, password));
+        userRepo.save(new User(User.userType.customer, email, username, password));
         return "registered successfully!";
     }
 

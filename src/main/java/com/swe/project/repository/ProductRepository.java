@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     Product findProductById(Integer id);
+    Iterable<Product> findAllByInStock(boolean inStock);
 }

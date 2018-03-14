@@ -15,14 +15,15 @@ public class Product {
     private String priceRange;
     private double price;
     private String category;
-    private  Integer brandId;
+    private Integer brandId;
+    private boolean inStock;
 
 
-    public Product(){
-        this.name="";
-        this.priceRange="";
-        this.price=0.0;
-        this.category="";
+    public Product() {
+        this.name = "";
+        this.priceRange = "";
+        this.price = 0.0;
+        this.category = "";
     }
 
     public Product(String name, String priceRange, double price, String category) {
@@ -78,6 +79,14 @@ public class Product {
 
     public void setBrandId(Integer brandId) {
         this.brandId = brandId;
+    }
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
     }
 }
 
