@@ -12,7 +12,7 @@ public class UserController {
     private UserRepository userRepo;
 
 
-    @PostMapping (value = "/register")
+    @GetMapping (value = "/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password){
 
         if(userRepo.existsByEmail(email))

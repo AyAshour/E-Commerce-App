@@ -15,7 +15,7 @@ public class Product {
     private String priceRange;
     private double price;
     private String category;
-
+    private  Integer brandId;
 
 
     public Product(){
@@ -70,6 +70,14 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Integer getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Integer brandId) {
+        this.brandId = brandId;
     }
 }
 
