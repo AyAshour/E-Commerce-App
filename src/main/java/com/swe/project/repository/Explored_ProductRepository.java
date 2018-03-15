@@ -5,8 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 
-
 @Repository
-public interface  Explored_ProductRepository extends CrudRepository<Explored_Product,Integer> {
-
+public interface Explored_ProductRepository extends CrudRepository<Explored_Product, Integer> {
+    Iterable<Explored_Product> findAll();
 }
