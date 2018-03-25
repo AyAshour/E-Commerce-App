@@ -20,6 +20,7 @@ public class Product {
 
 
     public Product() {
+        this.id = 0;
         this.name = "";
         this.priceRange = "";
         this.price = 0.0;

@@ -15,10 +15,8 @@ public class UserController {
 
     @GetMapping (value = "/register")
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password){
-
         if(userRepo.existsByEmail(email))
             return "user already exist!";
-
         userRepo.save(new User(User.userType.customer, email, username, password));
         return "registered successfully!";
     }

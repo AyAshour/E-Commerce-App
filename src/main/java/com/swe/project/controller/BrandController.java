@@ -21,7 +21,7 @@ public class BrandController {
 
     @PostMapping("/addBrand")
     @ResponseBody
-        String addBrand(Brand brand) {
+    String addBrand(Brand brand) {
         if(!brandRepo.existsByName(brand.name)) {
             brandRepo.save(brand);
             return "done";

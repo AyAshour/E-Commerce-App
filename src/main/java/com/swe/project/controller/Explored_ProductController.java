@@ -4,6 +4,8 @@ import com.swe.project.entity.*;
 import com.swe.project.repository.Explored_ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Array;
@@ -23,21 +25,19 @@ public class Explored_ProductController {
         return explored_productRepository.findAll();
     }
 
-    ArrayList<Explored_Product> filterExplored_ProductsByStore(Store s) {
+    ArrayList<Explored_Product> filterExplored_ProductsByStore(Integer storeID) {
         Iterable<Explored_Product> products = getExplored_Products();
         ArrayList<Explored_Product> ret = new ArrayList<>();
         for (Explored_Product p : products) {
-            Integer id = p.getProductID();
-            int sID = s.getId();
-            if (sID == id) {
+            if (storeID == p.getProductID()) {
                 ret.add(p);
             }
         }
         return ret;
     }
 
-    Integer numberOfUsersExploredHisProducts(Store s) {
-        ArrayList<Explored_Product> products = filterExplored_ProductsByStore(s);
+    Integer numberOfUsersExploredHisProducts(Integer storeID) {
+        ArrayList<Explored_Product> products = filterExplored_ProductsByStore(storeID);
         int sum = 0;
         HashMap<Integer, Integer> mp = new HashMap<Integer, Integer>();
         for (Explored_Product p : products) {
@@ -48,5 +48,10 @@ public class Explored_ProductController {
             }
         }
         return sum;
+    }
+
+    @RequestMapping(value = "/storeViews")
+    public Integer storeViews(@RequestParam Integer storeID) {
+        return numberOfUsersExploredHisProducts(storeID);
     }
 }

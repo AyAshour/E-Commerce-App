@@ -24,6 +24,7 @@ public class StoreController {
     @PostMapping("/acceptStore")
     public String acceptStore(@RequestParam Integer id){
         Store targetStore = storeRepo.findStoreById(id);
+        storeRepo.delete(targetStore); // to avoid duplicated data
         targetStore.setAccepted(true);
         storeRepo.save(targetStore);
         return "done!";

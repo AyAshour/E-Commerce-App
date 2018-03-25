@@ -2,35 +2,56 @@ package com.swe.project.entity;
 
 import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String username;
 
+
     public static enum userType {
-        admin , customer , storeOwner;
+            admin("admin") , customer("customer") , storeOwner("owner");
+        public String type;
+        userType(String type) {
+            this.type=type;
+        }
+        public String getType(){
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public static userType parse(String type){
+            for(userType type1 :userType.values()){
+                if(type1.type==type){
+                    return type1;
+                }
+            }
+            return null;
+        }
     }
-    private userType type;
+
+
+
+    private String type;
+
     private String email;
     private String password;
 
     public User(userType type, String email, String username, String password) {
-        this.type = type;
+        this.type = type.getType();
         this.email = email;
         this.username = username;
         this.password = password;
     }
 
     public User() {
-        this.type = userType.customer;
+        this.type = userType.customer.getType();
         this.email = "";
         this.username = "";
         this.password = "";
@@ -44,12 +65,12 @@ public class User {
         this.username = username;
     }
 
-    public void setAdmin(userType type) {
-        this.type = type;
+    public void setType(userType type) {
+        this.type= type.getType();
     }
 
     public userType getType() {
-        return type;
+        return userType.parse(type);
     }
 
     public String getEmail() {
