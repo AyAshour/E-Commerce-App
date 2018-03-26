@@ -11,6 +11,6 @@ public class StoreProducts {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer ID;
     public Integer storeID;
-    public String username;
+    public Integer product_id;
 
 }

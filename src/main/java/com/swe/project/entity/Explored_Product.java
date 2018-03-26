@@ -13,17 +13,17 @@ public class Explored_Product {
     private  Integer ID;
 
     private Integer productID;
-    private Integer customerID;
+    private String username;
 
     Explored_Product() {
         ID=0;
         productID=0;
-        customerID=0;
+        username="";
     }
-    Explored_Product(Integer ID, Integer productID, Integer customerID){
+    Explored_Product(Integer ID, Integer productID, String username){
         this.ID = ID;
         this.productID = productID;
-        this.customerID = customerID;
+        this.username  = username;
     }
 
     public Integer getProductID() {
@@ -34,19 +34,19 @@ public class Explored_Product {
         this.productID = productID;
     }
 
-    public Integer getCustomerID() {
-        return customerID;
-    }
-
-    public void setCustomerID(Integer customerID) {
-        this.customerID = customerID;
-    }
-
     public Integer getID() {
         return ID;
     }
 
     public void setID(Integer ID) {
         this.ID = ID;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -14,44 +14,42 @@ import java.util.HashMap;
 
 @RestController
 public class Explored_ProductController {
-    @Autowired
-    private Explored_ProductRepository explored_productRepository;
+//    @Autowired
+//    private Explored_ProductRepository explored_productRepository;
 
-    @Autowired
-    private StoreRepository storeRepository;
+//    @Autowired
+//    private StoreRepository storeRepository;
 
 
-    Iterable<Explored_Product> getExplored_Products() {
-        return explored_productRepository.findAll();
-    }
 
-    ArrayList<Explored_Product> filterExplored_ProductsByStore(Integer storeID) {
-        Iterable<Explored_Product> products = getExplored_Products();
-        ArrayList<Explored_Product> ret = new ArrayList<>();
-        for (Explored_Product p : products) {
-            if (storeID == p.getProductID()) {
-                ret.add(p);
-            }
-        }
-        return ret;
-    }
+//    Iterable<Explored_Product> getExplored_Products() {
+//        return explored_productRepository.findAll();
+//    }
 
-    Integer numberOfUsersExploredHisProducts(Integer storeID) {
-        ArrayList<Explored_Product> products = filterExplored_ProductsByStore(storeID);
-        int sum = 0;
-        HashMap<Integer, Integer> mp = new HashMap<Integer, Integer>();
-        for (Explored_Product p : products) {
-            Integer id = p.getCustomerID();
-            if (!mp.containsKey(id)) {
-                mp.put(id, 1);
-                sum++;
-            }
-        }
-        return sum;
-    }
+//    ArrayList<Explored_Product> filterExplored_ProductsByStore(Integer storeID) {
+//        Iterable<Explored_Product> products = getExplored_Products();
+//        ArrayList<Explored_Product> ret = new ArrayList<>();
+//        for (Explored_Product p : products) {
+//            if (storeID == p.getProductID()) {
+//                ret.add(p);
+//            }
+//        }
+//        return ret;
+//    }
 
-    @RequestMapping(value = "/storeViews")
-    public Integer storeViews(@RequestParam Integer storeID) {
-        return numberOfUsersExploredHisProducts(storeID);
-    }
+//    Integer numberOfUsersExploredHisProducts(Integer storeID) {
+//        ArrayList<Explored_Product> products = filterExplored_ProductsByStore(storeID);
+//        int sum = 0;
+//        HashMap<Integer, Integer> mp = new HashMap<Integer, Integer>();
+//        for (Explored_Product p : products) {
+//            Integer id = p.getCu();
+//            if (!mp.containsKey(id)) {
+//                mp.put(id, 1);
+//                sum++;
+//            }
+//        }
+//        return sum;
+//    }
+
+
 }

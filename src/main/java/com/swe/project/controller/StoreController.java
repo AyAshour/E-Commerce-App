@@ -1,10 +1,16 @@
 package com.swe.project.controller;
 
+import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
 import com.swe.project.repository.StoreRepository;
+import com.swe.project.service.StoreService;
+import javafx.util.Pair;
+import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 
 @RestController
@@ -14,6 +20,18 @@ public class StoreController {
     @Autowired
     private StoreRepository storeRepo;
 
+
+
+
+    @GetMapping(path = "/adminView")
+    public ArrayList<Object> adminView(@RequestParam Integer storeID){
+        ArrayList<Object> ret = new ArrayList<Object>();
+        ret.add(StoreService.singleTone.getAllProducts(storeID));
+        ret.add(new Pair<String,Integer>("Store Viewers",StoreService.singleTone.numberOfStoreViewers(storeID)));
+        ret.add(new Pair<String,Integer>("Store Buyers",StoreService.singleTone.numberOfStoreBuyers(storeID)));
+        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",StoreService.singleTone.soldOutProducts(storeID)));
+        return ret;
+    }
     @PostMapping(path = "/addStore")
     public String addStore(@RequestParam String name, @RequestParam String type, @RequestParam String location, @RequestParam String owner){
         Store s = new Store(name, type, location, owner);
