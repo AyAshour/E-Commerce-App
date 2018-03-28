@@ -43,6 +43,10 @@ public class User {
     private String email;
     private String password;
 
+    @OneToOne
+    @JoinColumn(name = "cartId")
+    private Cart cart;
+
     public User(userType type, String email, String username, String password) {
         this.type = type.getType();
         this.email = email;

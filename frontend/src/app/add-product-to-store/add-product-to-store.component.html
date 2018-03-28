@@ -1,0 +1,25 @@
+
+  <title>Add Store Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+  <div class="container-fluid bg-grey">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2>Add Product To Store</h2><br>
+        Product:
+        <select class="form-control" >
+          <option *ngFor="let product of products">{{product.name}}</option>
+        </select><br>
+        Quantity: <input type="number" class="form-control" size="50"  min="0" value="0" required><br>
+        <br><button class="btn btn-default btn-lg" >Add Product</button>
+      </div>
+    </div>
+  </div>
+

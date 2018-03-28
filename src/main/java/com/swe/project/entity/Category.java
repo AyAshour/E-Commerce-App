@@ -6,18 +6,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Brand {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String name;
+    public String name;
 
-    public Brand(){
-        name="";
+    public Category(){
+        name = "";
     }
 
-    public Brand(String name){
+    public Category(String name){
         this.name = name;
     }
 
@@ -36,6 +36,4 @@ public class Brand {
     public void setName(String name) {
         this.name = name;
     }
-
 }
-

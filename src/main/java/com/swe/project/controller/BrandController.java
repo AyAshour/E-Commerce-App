@@ -5,10 +5,13 @@ import com.swe.project.entity.Product;
 import com.swe.project.repository.BrandRepository;
 import com.swe.project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/brand")
 public class BrandController {
@@ -21,16 +24,26 @@ public class BrandController {
 
     @PostMapping("/addBrand")
     @ResponseBody
-    String addBrand(Brand brand) {
-        if(!brandRepo.existsByName(brand.name)) {
+    ResponseEntity<?> addBrand(@RequestParam  String brandName) {
+        if(!brandRepo.existsByName(brandName)) {
+            Brand brand = new Brand(brandName);
             brandRepo.save(brand);
-            return "done";
+            return ResponseEntity.ok().build();
         }
-        return  "notDone";
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
+
+    @GetMapping(value = "/getAll")
+    public ResponseEntity<?> getAll() {
+        Iterable<Brand> brands = brandRepo.findAll();
+        if(brands.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(brands);
     }
 
 
-    @PostMapping("/viewMostOrdered" )
+  /*  @PostMapping("/viewMostOrdered" )
     public Brand mostOrderedBrand() {
         Iterable<Product> products = productController.getProductsOutOfStock();
         HashMap<String, Integer> mp = new HashMap<String, Integer>();
@@ -53,4 +66,5 @@ public class BrandController {
         }
         return ret;
     }
+*/
 }

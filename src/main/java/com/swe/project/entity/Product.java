@@ -1,9 +1,6 @@
 package com.swe.project.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Product {
@@ -14,8 +11,15 @@ public class Product {
     private String name;
     private String priceRange;
     private double price;
-    private String category;
-    private Integer brandId;
+
+    @OneToOne
+    @JoinColumn(name = "categoryId")
+    private Category category;
+
+    @OneToOne
+    @JoinColumn(name = "brandId")
+    private Brand brand;
+
     private boolean inStock;
 
 
@@ -24,13 +28,15 @@ public class Product {
         this.name = "";
         this.priceRange = "";
         this.price = 0.0;
-        this.category = "";
+        this.brand = null;
+        this.category = null;
     }
 
-    public Product(String name, String priceRange, double price, String category) {
+    public Product(String name, String priceRange, double price, Brand brand, Category category) {
         this.name = name;
         this.priceRange = priceRange;
         this.price = price;
+        this.brand = brand;
         this.category = category;
     }
 
@@ -38,7 +44,7 @@ public class Product {
         return id;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
@@ -54,7 +60,7 @@ public class Product {
         return price;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -74,12 +80,12 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getBrandId() {
-        return brandId;
+    public Brand getBrandId() {
+        return brand;
     }
 
-    public void setBrandId(Integer brandId) {
-        this.brandId = brandId;
+    public void setBrandId(Brand brand) {
+        this.brand = brand;
     }
 
     public boolean isInStock() {

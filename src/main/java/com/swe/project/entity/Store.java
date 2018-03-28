@@ -1,9 +1,6 @@
 package com.swe.project.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Store {
@@ -11,17 +8,20 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @OneToOne
+    @JoinColumn(name = "ownerId")
+    private User storeOwner;
+
     private String name;
     private String type;
     private String location;
-    private String ownerUsername;
     private boolean accepted;
 
-    public Store(String name, String type, String location, String ownerUsername) {
+    public Store(String name, String type, String location, User owner) {
         this.name = name;
         this.type = type;
         this.location = location;
-        this.ownerUsername = ownerUsername;
+        this.storeOwner = owner;
         this.accepted = false;
     }
 
@@ -29,7 +29,7 @@ public class Store {
         this.name = "";
         this.type = "";
         this.location = "";
-        this.ownerUsername = "";
+        this.storeOwner = null;
         this.accepted = false;
     }
 
@@ -65,12 +65,12 @@ public class Store {
         this.location = location;
     }
 
-    public String getOwnerUsername() {
-        return ownerUsername;
+    public User getStoreOwner() {
+        return storeOwner;
     }
 
-    public void setOwnerUsername(String ownerUsername) {
-        this.ownerUsername = ownerUsername;
+    public void setStoreOwner(User owner) {
+        this.storeOwner = owner;
     }
 
     public boolean isAccepted() {
