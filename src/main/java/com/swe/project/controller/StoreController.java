@@ -20,7 +20,8 @@ public class StoreController {
     @Autowired
     private StoreRepository storeRepo;
 
-
+    @Autowired
+    private StoreService storeService;
 
 
     @GetMapping(path = "/adminView")

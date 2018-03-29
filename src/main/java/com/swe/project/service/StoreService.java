@@ -9,10 +9,12 @@ import com.swe.project.repository.Explored_ProductRepository;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+@Service
 public class StoreService {
     @Autowired
     StoreProductsRepository storeProductsDP;

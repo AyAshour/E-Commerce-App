@@ -1,9 +1,6 @@
 package com.swe.project.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Store {
@@ -14,22 +11,23 @@ public class Store {
     private String name;
     private String type;
     private String location;
-    private String ownerUsername;
+    private String owner_username;
     private boolean accepted;
 
     public Store(String name, String type, String location, String ownerUsername) {
         this.name = name;
         this.type = type;
         this.location = location;
-        this.ownerUsername = ownerUsername;
+        this.owner_username = ownerUsername;
         this.accepted = false;
     }
 
     public Store() {
+        id = 0;
         this.name = "";
         this.type = "";
         this.location = "";
-        this.ownerUsername = "";
+        this.owner_username = "";
         this.accepted = false;
     }
 
@@ -66,11 +64,11 @@ public class Store {
     }
 
     public String getOwnerUsername() {
-        return ownerUsername;
+        return owner_username;
     }
 
     public void setOwnerUsername(String ownerUsername) {
-        this.ownerUsername = ownerUsername;
+        this.owner_username = ownerUsername;
     }
 
     public boolean isAccepted() {
