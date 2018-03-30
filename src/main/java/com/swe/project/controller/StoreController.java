@@ -24,15 +24,16 @@ public class StoreController {
     private StoreService storeService;
 
 
-    @GetMapping(path = "/adminView")
-    public ArrayList<Object> adminView(@RequestParam Integer storeID){
-        ArrayList<Object> ret = new ArrayList<Object>();
-        ret.add(StoreService.singleTone.getAllProducts(storeID));
-        ret.add(new Pair<String,Integer>("Store Viewers",StoreService.singleTone.numberOfStoreViewers(storeID)));
-        ret.add(new Pair<String,Integer>("Store Buyers",StoreService.singleTone.numberOfStoreBuyers(storeID)));
-        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",StoreService.singleTone.soldOutProducts(storeID)));
-        return ret;
-    }
+
+//    @GetMapping(path = "/adminView")
+//    public ArrayList<Object> adminView(@RequestParam Integer storeID){
+//        ArrayList<Object> ret = new ArrayList<Object>();
+//        ret.add(storeService.getAllProducts(storeID));
+//        ret.add(new Pair<String,Integer>("Store Viewers",storeService.numberOfStoreViewers(storeID)));
+//        ret.add(new Pair<String,Integer>("Store Buyers",storeService.numberOfStoreBuyers(storeID)));
+//        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",storeService.soldOutProducts(storeID)));
+//        return ret;
+//    }
     @PostMapping(path = "/addStore")
     public String addStore(@RequestParam String name, @RequestParam String type, @RequestParam String location, @RequestParam String owner){
         Store s = new Store(name, type, location, owner);

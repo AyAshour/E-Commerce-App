@@ -1,8 +1,11 @@
 package com.swe.project.entity;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
 import javax.persistence.*;
 
 @Entity
+@EnableAutoConfiguration
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

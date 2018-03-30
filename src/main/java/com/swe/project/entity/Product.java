@@ -1,11 +1,14 @@
 package com.swe.project.entity;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@EnableAutoConfiguration
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

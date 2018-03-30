@@ -1,11 +1,13 @@
 package com.swe.project.entity;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
 
 
 @Entity
+@EnableAutoConfiguration
 public class User {
 
     @Id
