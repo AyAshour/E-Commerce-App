@@ -2,10 +2,8 @@ package com.swe.project.entity;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @EnableAutoConfiguration
@@ -13,8 +11,10 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
     public String name,category;
+
+    @OneToMany
+    public ArrayList<Product> products;
     public Brand(){
         id=0;
         name="";
@@ -34,19 +34,4 @@ public class Brand {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 }

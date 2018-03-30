@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface StoreRepository extends CrudRepository<Store, Integer> {
     Iterable<Store> findStoresByAccepted(boolean accepted);
     Store findStoreById(Integer id);
+
 }

@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 
 @Entity
@@ -11,7 +12,24 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    private String username;
+    public String username;
+    public String type;
+    public String email;
+    private String password;
+
+    @OneToMany
+    public ArrayList<Store> stores;
+
+    @ManyToMany
+    public ArrayList<Product> viewedProducts;
+
+    public User(String ownerUsername) {
+        this.username=ownerUsername;
+        this.type = userType.customer.getType();
+        this.email = "";
+        this.username = "";
+        this.password = "";
+    }
 
 
     public static enum userType {
@@ -40,10 +58,6 @@ public class User {
 
 
 
-    private String type;
-
-    private String email;
-    private String password;
 
     public User(userType type, String email, String username, String password) {
         this.type = type.getType();
@@ -59,29 +73,7 @@ public class User {
         this.password = "";
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setType(userType type) {
-        this.type= type.getType();
-    }
-
-    public userType getType() {
-        return userType.parse(type);
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getPassword() {
         return password;

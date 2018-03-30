@@ -45,7 +45,7 @@ public class StoreController {
     public String acceptStore(@RequestParam Integer id){
         Store targetStore = storeRepo.findStoreById(id);
         storeRepo.delete(targetStore); // to avoid duplicated data
-        targetStore.setAccepted(true);
+        targetStore.accepted=true;
         storeRepo.save(targetStore);
         return "done!";
     }
@@ -66,9 +66,9 @@ public class StoreController {
         return storeRepo.findStoresByAccepted(false);
     }
 
-    /*@PostMapping(path = "/addStore")
+    @PostMapping(path = "/addStoreObject")
     public String addStore(@ModelAttribute("store") Store store){
         storeRepo.save(store);
         return "done!";
-    }*/
+    }
 }

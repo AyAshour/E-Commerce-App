@@ -3,6 +3,7 @@ package com.swe.project.entity;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @EnableAutoConfiguration
@@ -11,26 +12,37 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String name;
-    private String type;
-    private String location;
-    private String owner_username;
-    private boolean accepted;
+    public String name;
+    public String type;
+    public String location;
+    public boolean accepted;
+
+    @ManyToOne
+    @JoinColumn
+    public User owner;
+
+
+
 
     public Store(String name, String type, String location, String ownerUsername) {
         this.name = name;
         this.type = type;
         this.location = location;
-        this.owner_username = ownerUsername;
+        this.owner = new User(ownerUsername);
         this.accepted = false;
     }
-
+    public Store(int id){
+        this.id = id;
+        this.name = "";
+        this.type = "";
+        this.location = "";
+        this.accepted = false;
+    }
     public Store() {
         id = 0;
         this.name = "";
         this.type = "";
         this.location = "";
-        this.owner_username = "";
         this.accepted = false;
     }
 
@@ -42,43 +54,5 @@ public class Store {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getOwnerUsername() {
-        return owner_username;
-    }
-
-    public void setOwnerUsername(String ownerUsername) {
-        this.owner_username = ownerUsername;
-    }
-
-    public boolean isAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
-    }
 }

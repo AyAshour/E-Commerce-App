@@ -3,7 +3,10 @@ package com.swe.project.service;
 
 
 import com.swe.project.entity.Product;
+import com.swe.project.entity.Store;
 import com.swe.project.repository.ProductRepository;
+import com.swe.project.repository.StoreRepository;
+import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +15,10 @@ import java.util.TreeSet;
 
 @Service
 public class StoreService {
-//    @Autowired
-//    StoreProductsRepository storeProductsDP;
-//    @Autowired
-//    BuyProductRepository buyProductDP;
-//    @Autowired
-//    Explored_ProductRepository exploredDP;
-//    @Autowired
-//    ProductRepository productDP;
-//
-//    public static StoreService singleTone = new StoreService();
+     private UserRepository userRepository;
+     private StoreRepository storeRepository;
+     private ProductRepository productRepository;
+
 //    public ArrayList<Integer> getAllProductsID(Integer storeID){
 //       Iterable<StoreProducts> all = storeProductsDP.findAllByStoreID(storeID);
 //       ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -30,23 +27,17 @@ public class StoreService {
 //       }
 //       return ret;
 //   }
-//   public ArrayList<Product> getAllProducts(Integer storeID){
-//       Iterable<StoreProducts> all = storeProductsDP.findAllByStoreID(storeID);
-//       ArrayList<Product> ret = new ArrayList<Product>();
-//       for(StoreProducts sp : all) ret.add(productDP.findProductById(sp.product_id));
-//       return ret;
-//   }
-//   public Integer numberOfStoreViewers(Integer storeID) {
-//       ArrayList<Integer> products_ids = getAllProductsID(storeID);
-//       TreeSet<String> users = new TreeSet<String>();
-//       for(Integer id :products_ids){
-//           Iterable<Explored_Product> ex = exploredDP.findAllByProductID(id);
-//           for(Explored_Product exi : ex){
-//               users.add(exi.getUsername());
-//           }
-//       }
-//       return users.size();
-//   }
+   public Iterable<Product> getAllProducts(Integer storeID){
+      return productRepository.findAllByStore(new Store(storeID));
+   }
+   public Integer numberOfStoreViewers(Integer storeID) {
+       Iterable<Product> storeProducts = getAllProducts(storeID);
+       TreeSet<String> users = new TreeSet<String>();
+       for(Product p :storeProducts){
+
+       }
+       return users.size();
+   }
 //   public Integer numberOfStoreBuyers(Integer storeID) {
 //       ArrayList<Integer> products_ids = getAllProductsID(storeID);
 //       TreeSet<String> users = new TreeSet<String>();
