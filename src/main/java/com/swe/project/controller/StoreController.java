@@ -3,7 +3,9 @@ package com.swe.project.controller;
 import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
 import com.swe.project.entity.User;
+import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
+import com.swe.project.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,27 @@ public class StoreController {
     @Autowired
     private StoreRepository storeRepo;
 
+    @Autowired
+    private ProductRepository productRepo;
+
+    @Autowired
+    private StoreService storeService;
+
+
+
+//    @GetMapping(path = "/adminView")
+//    public ArrayList<Object> adminView(@RequestParam Integer storeID){
+//        ArrayList<Object> ret = new ArrayList<Object>();
+//        ret.add(storeService.getAllProducts(storeID));
+//        ret.add(new Pair<String,Integer>("Store Viewers",storeService.numberOfStoreViewers(storeID)));
+//        ret.add(new Pair<String,Integer>("Store Buyers",storeService.numberOfStoreBuyers(storeID)));
+//        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",storeService.soldOutProducts(storeID)));
+//        return ret;
+//    }
+
     @PostMapping(path = "/addStore")
-    public ResponseEntity<?> addStore(@RequestBody Store store){
+    public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam User owner){
+        store.setStoreOwner(owner); // can i send it inside Store from the front end.
         storeRepo.save(store);
         return ResponseEntity.ok().build();
     }
@@ -48,8 +69,6 @@ public class StoreController {
             return ResponseEntity.status(HttpStatus.OK).body(stores);
     }
 
-
-
     @GetMapping(path = "/getUnAcceptedStores")
     public ResponseEntity<?> getUnAcceptedStores(){
         Iterable<Store> stores = storeRepo.findStoresByAccepted(false);
@@ -59,9 +78,20 @@ public class StoreController {
             return ResponseEntity.status(HttpStatus.OK).body(stores);
     }
 
-    /*@PostMapping(path = "/addStore")
-    public ResponseEntity<?> addStore(@ModelAttribute("store") Store store){
+    @PostMapping("/addProductToStore")
+    ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
+        Store store = storeRepo.findStoreById(storeId);
+
+        store.getProducts().add(product);
         storeRepo.save(store);
-        return ResponseEntity.ok().build();;
-    }*/
+
+        Integer addedQuantity = product.getQuantity();
+        Product existProduct = productRepo.findProductById(product.getId());
+        Integer existQuantity = existProduct.getQuantity();
+        existProduct.setQuantity(existQuantity + addedQuantity);
+        productRepo.save(existProduct);
+
+        return ResponseEntity.status(HttpStatus.OK).body(store);
+    }
+
 }

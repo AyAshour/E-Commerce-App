@@ -8,7 +8,7 @@ import {UserService} from "../services/user/user.service";
 })
 export class MainComponent implements OnInit {
 
-  private res : object = null;
+  private response : object = null;
   private isEmail: boolean = false;
   public user = {
     "email" : "",
@@ -18,28 +18,6 @@ export class MainComponent implements OnInit {
 
   constructor(private userService: UserService){}
 
-  register(){
-    this.userService.register(this.user).subscribe(response => {
-        console.log(response)
-        this.res = response.json();
-      });
-  }
-
-  login(){
-    /*check*/
-    if(this.isEmail){
-      this.userService.loginByEmail(this.user).subscribe(response => {
-        this.res = response;
-      })
-    }
-    else{
-      this.userService.loginByUserName(this.user).subscribe(response => {
-        this.res = response;
-      })
-    }
-
-
-  }
 
   ngOnInit() {
   }

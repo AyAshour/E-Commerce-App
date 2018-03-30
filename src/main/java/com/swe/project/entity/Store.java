@@ -1,8 +1,14 @@
 package com.swe.project.entity;
 
+
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@EnableAutoConfiguration
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -11,6 +17,9 @@ public class Store {
     @OneToOne
     @JoinColumn(name = "ownerId")
     private User storeOwner;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+    private List<Product> products;
 
     private String name;
     private String type;
@@ -23,6 +32,7 @@ public class Store {
         this.location = location;
         this.storeOwner = owner;
         this.accepted = false;
+        this.products = new ArrayList<Product>();
     }
 
     public Store() {
@@ -31,6 +41,7 @@ public class Store {
         this.location = "";
         this.storeOwner = null;
         this.accepted = false;
+        this.products = new ArrayList<Product>();
     }
 
     public Integer getId() {
@@ -79,5 +90,13 @@ public class Store {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

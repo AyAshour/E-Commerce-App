@@ -1,11 +1,13 @@
 package com.swe.project.entity;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
 
 
 @Entity
+@EnableAutoConfiguration
 public class User {
 
     @Id
@@ -91,5 +93,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

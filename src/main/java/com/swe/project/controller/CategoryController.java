@@ -28,7 +28,7 @@ public class CategoryController {
     }
 
     @GetMapping(path = "/getAll")
-    public ResponseEntity<?> getCategories(){
+    public ResponseEntity<?> getAll(){
         Iterable<Category> categories = categoryRepo.findAll();
         if(categories.equals(null))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

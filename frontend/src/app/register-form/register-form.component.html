@@ -1,0 +1,14 @@
+<form method="post">
+  <div id="register" class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2>Register</h2><br>
+        <!--Name: <input [(ngModel)] = "user.name" type="text" class="form-control" size="50" placeholder="name" required><br>-->
+        User name: <input [(ngModel)] = "user.username" name="username"type="text" class="form-control" size="50" placeholder="user name" required><br>
+        Password: <input [(ngModel)] = "user.password" name="password"type="password" class="form-control" size="50" placeholder="password" required><br>
+        Email: <input [(ngModel)] = "user.email" name="email"type="email" ngModel email="true" class="form-control" size="50" placeholder="email" required><br>
+        <br><button class="btn btn-default btn-lg" style="color: #607D8B" formaction="" (click)=register() routerLink="/stores">register</button>
+      </div>
+    </div>
+  </div>
+</form>

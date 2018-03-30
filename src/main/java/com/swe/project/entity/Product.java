@@ -1,8 +1,17 @@
 package com.swe.project.entity;
 
+
 import javax.persistence.*;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 @Entity
+@EnableAutoConfiguration
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -11,6 +20,7 @@ public class Product {
     private String name;
     private String priceRange;
     private double price;
+    private Integer quantity;
 
     @OneToOne
     @JoinColumn(name = "categoryId")
@@ -24,18 +34,19 @@ public class Product {
 
 
     public Product() {
-        this.id = 0;
         this.name = "";
         this.priceRange = "";
         this.price = 0.0;
+        this.quantity = 0;
         this.brand = null;
         this.category = null;
     }
 
-    public Product(String name, String priceRange, double price, Brand brand, Category category) {
+    public Product(String name, String priceRange, double price, Integer quantity, Brand brand, Category category) {
         this.name = name;
         this.priceRange = priceRange;
         this.price = price;
+        this.quantity = quantity;
         this.brand = brand;
         this.category = category;
     }
@@ -94,6 +105,22 @@ public class Product {
 
     public void setInStock(boolean inStock) {
         this.inStock = inStock;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 }
 

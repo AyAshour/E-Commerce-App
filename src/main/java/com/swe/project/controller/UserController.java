@@ -21,41 +21,23 @@ public class UserController {
         if(userRepo.existsByEmail(user.getEmail()) || userRepo.existsByUsername(user.getUsername()))
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); // CONFLICT or BAD_REQUEST ?
         userRepo.save(user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(user);
     }
-/*
-    @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
-        User temp;
-        if(userRepo.findByUsername(user.getUsername()) != null){
-            temp = userRepo.findByUsername(user.getUsername());
 
-            if(temp.getPassword().equals(user.getPassword()))
-                return ResponseEntity.ok().build();
-        }
-        else if(userRepo.findByEmail(user.getEmail()) != null){
-            temp = userRepo.findByEmail(user.getEmail());
-
-            if(temp.getPassword().equals(user.getPassword()))
-                return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-*/
     @GetMapping("/login/byUserName")
-    public boolean loginByUserName(@RequestParam String username, @RequestParam String password){
+    public ResponseEntity<?> loginByUserName(@RequestParam String username, @RequestParam String password){
         User user = userRepo.findByUsername(username);
-        if(!(user == null) && password.equals(user.getPassword()))
-            return true;
-        return false;
+        if(user != null && password.equals(user.getPassword()))
+            return ResponseEntity.ok().body(user);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/login/byEmail")
-    public boolean loginByEmail(@RequestParam String email, @RequestParam String password){
+    public ResponseEntity<?> loginByEmail(@RequestParam String email, @RequestParam String password){
         User user = userRepo.findByEmail(email);
-        if(!(user == null) && password.equals(user.getPassword()))
-            return true;
-        return false;
+        if(user != null && password.equals(user.getPassword()))
+            return ResponseEntity.ok().body(user);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }

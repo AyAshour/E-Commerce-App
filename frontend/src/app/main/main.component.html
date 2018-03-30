@@ -35,33 +35,11 @@
   <p>Online Shopping</p>
 </div>
 
-<form method="post">
-<div id="register" class="container-fluid">
-  <div class="row">
-    <div class="col-sm-8">
-      <h2>Register</h2><br>
-      <!--Name: <input [(ngModel)] = "user.name" type="text" class="form-control" size="50" placeholder="name" required><br>-->
-      User name: <input [(ngModel)] = "user.username" name="username"type="text" class="form-control" size="50" placeholder="user name" required><br>
-      Password: <input [(ngModel)] = "user.password" name="password"type="password" class="form-control" size="50" placeholder="password" required><br>
-      Email: <input [(ngModel)] = "user.email" name="email"type="email" class="form-control" size="50" placeholder="email" required><br>
-      <br><button class="btn btn-default btn-lg" (click)=register()>register</button>
-    </div>
-  </div>
-</div>
-</form>
+<!--<a routerLink="/stores" routerLinkActive="active">stores</a>
+<router-outlet></router-outlet>-->
 
-<form method="post">
-<div id="login"class="container-fluid bg-grey">
-  <div class="row">
-    <div class="col-sm-8">
-      <h2>Log in</h2><br>
-      Username/Email: <input [(ngModel)] = "user.username" type="text" class="form-control" size="50" placeholder="username or email" required><br>
-      Password: <input [(ngModel)] = "user.password" type="password" class="form-control" size="50" placeholder="password" 		  required><br>
-      <br><button class="btn btn-default btn-lg" (click)="login()">log in</button>
-    </div>
-  </div>
-</div>
-</form>
+<app-register-form></app-register-form>
+<app-login-form></app-login-form>
 
 <footer class="container-fluid text-center">
   <a href="#myPage">
@@ -69,43 +47,6 @@
   </a>
   <h3>Go Up</h3>
 </footer>
-
-<script>
-  $(document).ready(function(){
-    // Add smooth scrolling to all links in navbar + footer link
-    $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
-      // Make sure this.hash has a value before overriding default behavior
-      if (this.hash !== "") {
-        // Prevent default anchor click behavior
-        event.preventDefault();
-
-        // Store hash
-        var hash = this.hash;
-
-        // Using jQuery's animate() method to add smooth page scroll
-        // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
-        $('html, body').animate({
-          scrollTop: $(hash).offset().top
-        }, 900, function(){
-
-          // Add hash (#) to URL when done scrolling (default click behavior)
-          window.location.hash = hash;
-        });
-      } // End if
-    });
-
-    $(window).scroll(function() {
-      $(".slideanim").each(function(){
-        var pos = $(this).offset().top;
-
-        var winTop = $(window).scrollTop();
-        if (pos < winTop + 600) {
-          $(this).addClass("slide");
-        }
-      });
-    });
-  })
-</script>
 
 </body>
 </html>

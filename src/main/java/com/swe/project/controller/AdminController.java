@@ -38,7 +38,7 @@ public class AdminController {
     }
 */
 
-  @GetMapping("/login/byUserName")
+  /*@GetMapping("/login/byUserName")
   public boolean loginByUserName(@RequestParam String username, @RequestParam String password){
       User user = userRepo.findByUsername(username);
       if(!(user == null) && password.equals(user.getPassword()))
@@ -52,5 +52,5 @@ public class AdminController {
         if(!(user == null) && password.equals(user.getPassword()))
             return true;
         return false;
-    }
+    }*/
 }

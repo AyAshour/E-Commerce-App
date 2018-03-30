@@ -11,14 +11,16 @@ export class UserService {
   register(user: any){
     console.log("recieved user: ");
     console.log(user);
-    return this.http.post(this.baseURL+"register", user);
+    return this.http.post(this.baseURL+"register", user).map(
+      response => response.json()
+    );
   }
 
-  loginByUserName(user: any){
-    return this.http.get(this.baseURL+"login/byUserName").map((response => response.json()));
+  loginByUserName(username :String, password :String){
+    return this.http.get(this.baseURL+"login/byUserName?username="+username+"&password="+password).map((response => response.json()));
   }
 
-  loginByEmail(user: any){
-    return this.http.get(this.baseURL+"login/byEmail").map((response => response.json()));
+  loginByEmail(email :String, password :String){
+    return this.http.get(this.baseURL+"login/byEmail?email="+email+"&password="+password).map((response => response.json()));
   }
 }

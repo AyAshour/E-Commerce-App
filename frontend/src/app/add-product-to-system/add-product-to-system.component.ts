@@ -29,7 +29,7 @@ export class AddProductToSystemComponent implements OnInit {
   }
 
   addProduct(){
-    this.productService.addProduct(this.product).subscribe(response => {
+    this.productService.addProductToSystem(this.product).subscribe(response => {
       console.log(response);
       this.res = response;
     });

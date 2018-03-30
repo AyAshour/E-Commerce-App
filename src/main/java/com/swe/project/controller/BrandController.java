@@ -43,6 +43,7 @@ public class BrandController {
     }
 
 
+
   /*  @PostMapping("/viewMostOrdered" )
     public Brand mostOrderedBrand() {
         Iterable<Product> products = productController.getProductsOutOfStock();
@@ -51,7 +52,7 @@ public class BrandController {
         Brand ret = new Brand();
         for(Product p:products) {
             Integer id = p.getBrandId();
-            Brand brand = brandRepo.getBrandById(id);
+            Brand brand = brandRepo.findById(id);
             String name = brand.getName();
             if(!mp.containsKey(name)) {
                 mp.put(name, 1);
