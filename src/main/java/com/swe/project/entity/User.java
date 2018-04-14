@@ -1,10 +1,9 @@
 package com.swe.project.entity;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -19,6 +18,9 @@ public class User {
     private String password;
 
     @OneToMany
+    public Set<User> collaborators;
+
+    @OneToMany
     public Set<Store> stores;
 
     @ManyToMany
@@ -29,7 +31,7 @@ public class User {
     private Cart cart;
 
     public User(String ownerUsername) {
-        this.username=ownerUsername;
+        this.username = ownerUsername;
         this.type = userType.customer.getType();
         this.email = "";
         this.username = "";
@@ -38,12 +40,14 @@ public class User {
 
 
     public static enum userType {
-            admin("admin") , customer("customer") , storeOwner("owner");
+        admin("admin"), customer("customer"), storeOwner("owner");
         public String type;
+
         userType(String type) {
-            this.type=type;
+            this.type = type;
         }
-        public String getType(){
+
+        public String getType() {
             return type;
         }
 
@@ -51,16 +55,15 @@ public class User {
             this.type = type;
         }
 
-        public static userType parse(String type){
-            for(userType type1 :userType.values()){
-                if(type1.type==type){
+        public static userType parse(String type) {
+            for (userType type1 : userType.values()) {
+                if (type1.type == type) {
                     return type1;
                 }
             }
             return null;
         }
     }
-
 
 
     public User(userType type, String email, String username, String password) {
@@ -70,7 +73,7 @@ public class User {
         this.password = password;
     }
 
-    public User() {
+    public User(String owner, String email, String username, String password) {
         this.type = userType.customer.getType();
         this.email = "";
         this.username = "";
@@ -131,5 +134,15 @@ public class User {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public void addStores(Set<Store> stores) {
+        this.stores.addAll(stores);
+    }
+    public void addCollaborators(Set<User> Collaborators) {
+        this.collaborators(Collaborators);
+    }
+
+    private void collaborators(Set<User> collaborators) {
     }
 }

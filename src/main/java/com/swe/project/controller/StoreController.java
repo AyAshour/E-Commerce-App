@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/store")
@@ -44,7 +46,7 @@ public class StoreController {
     @PostMapping(path = "/addStore")
     public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
 
-        store.setOwner(userRepo.findByUsername(ownerUsername)); // can i send it inside Store from the front end.
+        store.setOwner((Set<User>) userRepo.findByUsername(ownerUsername)); // can i send it inside Store from the front end.
         storeRepo.save(store);
         return ResponseEntity.ok().build();
     }
