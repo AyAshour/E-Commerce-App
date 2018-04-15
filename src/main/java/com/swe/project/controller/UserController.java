@@ -69,5 +69,4 @@ public class UserController {
             owner.addCollaborators(owners);
         }
     }
-
 }
