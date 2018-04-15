@@ -1,11 +1,10 @@
 package com.swe.project.controller;
 
-import com.swe.project.entity.Product;
-import com.swe.project.entity.Store;
-import com.swe.project.entity.User;
+import com.swe.project.entity.*;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
+import com.swe.project.service.ProductDiscountService;
 import com.swe.project.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -101,8 +100,44 @@ public class StoreController {
         Integer existQuantity = existProduct.getQuantity();
         existProduct.setQuantity(existQuantity + addedQuantity);
         productRepo.save(existProduct);
-
+        Action action = new ProductActions( product);
+        action.setStore(store);
+        action.setType("insert");
+        ActionController actionController = new ProductActionsController();
+        actionController.Add(action);
         return ResponseEntity.status(HttpStatus.OK).body(store);
     }
 
+    @RequestMapping("/removeProductFromStore")
+    ResponseEntity<?> removeProduct(@RequestBody Product product, @RequestParam Integer storeId, @RequestParam User originalOwner){
+        Store store = storeRepo.findStoreById(storeId);
+        Product productinSystem = productRepo.findProductById(product.getId());
+        if(originalOwner.equals(store.getOwner())){
+            for(Product p : store.getProducts()){
+                if(p.equals(product)){
+
+                    store.getProducts().remove(p);
+                    storeRepo.save(store);
+
+                    productinSystem.setQuantity(productinSystem.getQuantity() - p.getQuantity());
+                    productRepo.save(productinSystem);
+
+                    Action action = new ProductActions(product);
+                    action.setStore(store);
+                    action.setType("delete");
+                    ActionController actionController = new ProductActionsController();
+                    actionController.remove(action);
+
+                    return ResponseEntity.ok().build();
+                }
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+    ProductDiscountService productDiscountService;
+    @PostMapping("/addDiscountToProduct")
+    public ResponseEntity<?> addDiscount(@RequestBody Product product, @RequestParam double discount) {
+        productDiscountService.ApplyDiscount(product, discount);
+        return ResponseEntity.ok().build();
+    }
 }

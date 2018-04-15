@@ -1,7 +1,10 @@
 package com.swe.project.controller;
 
+import com.swe.project.entity.Cart;
 import com.swe.project.entity.Product;
 import com.swe.project.repository.ProductRepository;
+import com.swe.project.service.BuyProductService;
+import com.swe.project.service.ShippingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,8 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepo;
 
+    BuyProductService buyProductService;
+    ShippingService shippingService;
 
     @PostMapping("/addProductToSystem")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
@@ -81,6 +86,16 @@ public class ProductController {
             }
         }
         return ret;
+    }
+
+    @PostMapping("/buyProduct")
+    ResponseEntity<?> buyProduct(@RequestBody Product product, @RequestParam Integer quantity, @RequestParam String address)
+    {
+        buyProductService.buyProduct(product, quantity);
+        if(shippingService.canBeShipped(address)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

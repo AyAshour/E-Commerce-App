@@ -40,8 +40,10 @@ public class CartController {
       for(Map.Entry<Integer, Product> storeProduct : cart.getProducts().entrySet()){
           Product product = storeProduct.getValue();
           Integer productId = product.getId();
+
           Integer storeId = storeProduct.getKey();
           Store store = storeRepo.findStoreById(storeId);
+
           Integer productQtyInCart = product.getQuantity();
           Integer oldQtyInSystem = productRepo.findProductById(productId).getQuantity();
           productRepo.findProductById(productId).setQuantity(oldQtyInSystem-productQtyInCart);

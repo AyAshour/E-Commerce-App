@@ -5,8 +5,8 @@ import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Set;
-
 
 @Entity
 @EnableAutoConfiguration
@@ -28,16 +28,25 @@ public class User {
     @JoinColumn(name = "cartId")
     private Cart cart;
 
+    EnumSet<userType> userRoles;
+
+    public EnumSet<userType> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(EnumSet<userType> userRoles) {
+        this.userRoles = userRoles;
+    }
+
     public User(String ownerUsername) {
         this.username=ownerUsername;
-        this.type = userType.customer.getType();
+        //this.type = userType.storeOwner.getType();
         this.email = "";
         this.username = "";
         this.password = "";
     }
 
-
-    public static enum userType {
+    /*public static enum userType {
             admin("admin") , customer("customer") , storeOwner("owner");
         public String type;
         userType(String type) {
@@ -59,19 +68,19 @@ public class User {
             }
             return null;
         }
-    }
+    }*/
 
 
 
     public User(userType type, String email, String username, String password) {
-        this.type = type.getType();
+       // this.type = type.getType();
         this.email = email;
         this.username = username;
         this.password = password;
     }
 
     public User() {
-        this.type = userType.customer.getType();
+      //  this.type = userType.customer.getType();
         this.email = "";
         this.username = "";
         this.password = "";
