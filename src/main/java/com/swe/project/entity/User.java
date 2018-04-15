@@ -18,11 +18,12 @@ public class User {
     public String email;
     private String password;
 
-    @OneToMany
-    public Set<Store> stores;
+    /*@OneToMany
+    public Set<Store> stores;*/
 
+    /*
     @ManyToMany
-    public Set<Product> viewedProducts;
+    public Set<Product> viewedProducts;*/
 
     @OneToOne
     @JoinColumn(name = "cartId")
@@ -101,14 +102,14 @@ public class User {
         this.email = email;
     }
 
-    public Set<Store> getStores() {
+    /*public Set<Store> getStores() {
         return stores;
     }
 
     public void setStores(Set<Store> stores) {
         this.stores = stores;
-    }
-
+    }*/
+/*
     public Set<Product> getViewedProducts() {
         return viewedProducts;
     }
@@ -116,7 +117,7 @@ public class User {
     public void setViewedProducts(Set<Product> viewedProducts) {
         this.viewedProducts = viewedProducts;
     }
-
+*/
     public String getPassword() {
         return password;
     }

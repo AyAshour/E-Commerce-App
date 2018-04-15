@@ -12,7 +12,9 @@ export class UnacceptedStoresComponent implements OnInit {
   constructor(private storeService:StoreService) { }
 
   ngOnInit() {
-    this.storeService.getStoresRequests().subscribe(stores => this.unacceptedStores = stores);
+    this.storeService.getStoresRequests().subscribe(stores => {this.unacceptedStores = stores;
+    console.log(stores);
+    });
   }
 
   acceptStore(store){

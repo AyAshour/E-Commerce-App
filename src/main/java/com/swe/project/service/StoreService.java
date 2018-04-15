@@ -4,6 +4,7 @@ package com.swe.project.service;
 
 import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
+import com.swe.project.entity.User;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
@@ -19,6 +20,11 @@ public class StoreService {
      private UserRepository userRepository;
      private StoreRepository storeRepository;
      private ProductRepository productRepository;
+
+     public void addStore(Store store, String ownerUsername){
+         store.setOwner(userRepository.findByUsername(ownerUsername));
+         storeRepository.save(store);
+     }
 
 //    @Autowired
 //    StoreProductsRepository storeProductsDP;

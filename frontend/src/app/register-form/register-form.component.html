@@ -4,10 +4,43 @@
       <div class="col-sm-8">
         <h2>Register</h2><br>
         <!--Name: <input [(ngModel)] = "user.name" type="text" class="form-control" size="50" placeholder="name" required><br>-->
-        User name: <input [(ngModel)] = "user.username" name="username"type="text" class="form-control" size="50" placeholder="user name" required><br>
-        Password: <input [(ngModel)] = "user.password" name="password"type="password" class="form-control" size="50" placeholder="password" required><br>
-        Email: <input [(ngModel)] = "user.email" name="email"type="email" ngModel email="true" class="form-control" size="50" placeholder="email" required><br>
-        <br><button class="btn btn-default btn-lg" style="color: #607D8B" formaction="" (click)=register() routerLink="/stores">register</button>
+        User name: <input minlength="3" maxlength="20" [(ngModel)] = "user.username" name="username" #username="ngModel" type="text" class="form-control" size="50" placeholder="user name" required><br>
+
+        <div class="alert alert-danger" *ngIf="username.touched && !username.valid">
+
+          <div *ngIf="username.errors.required">this field is required !</div>
+          <div *ngIf="username.errors.minlength">min length is {{username.errors.minlength.requiredLength}}</div>
+          <div *ngIf="username.errors.maxlength">max length is {{username.errors.maxlength.requiredLength}}</div>
+
+        </div>
+
+        Password: <input minlength="3" maxlength="20" [(ngModel)] = "user.password" name="password" #mypassword="ngModel" type="password" class="form-control" size="50" placeholder="password" required><br>
+
+        <div class="alert alert-danger" *ngIf="mypassword.touched && !mypassword.valid">
+
+          <div *ngIf="mypassword.errors.required">this field is required !</div>
+          <div *ngIf="mypassword.errors.minlength">min length is {{mypassword.errors.minlength.requiredLength}}</div>
+          <div *ngIf="mypassword.errors.maxlength">max length is {{mypassword.errors.maxlength.requiredLength}}</div>
+
+        </div>
+
+
+        Email: <input minlength="3" maxlength="20" email [(ngModel)] = "user.email" name="email" #myemail="ngModel"  type="email"  class="form-control" size="50" placeholder="email" required><br>
+
+        <div class="alert alert-danger" *ngIf="myemail.touched && !myemail.valid">
+
+          <div *ngIf="myemail.errors.required">this field is required !</div>
+          <div *ngIf="myemail.errors.email">not right email format !</div>
+          <div *ngIf="myemail.errors.minlength">min length is {{myemail.errors.minlength.requiredLength}}</div>
+          <div *ngIf="myemail.errors.maxlength">max length is {{myemail.errors.maxlength.requiredLength}}</div>
+
+        </div>
+
+        <input type="checkbox" name="userType" value="customer"> customer<br>
+        <input type="checkbox" name="userType" value="storeOwner"> store owner<br>
+
+        <br><button class="btn btn-default btn-lg" style="color: #607D8B" formaction="" (click)=register()>register</button>
+
       </div>
     </div>
   </div>

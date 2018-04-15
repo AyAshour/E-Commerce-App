@@ -32,18 +32,18 @@ public class Store {
         this.location = location;
         this.owner = owner;
         this.accepted = false;
+        this.products = new ArrayList<Product>();
     }
-    public Store(int id){
+    public Store(){
         this.id = id;
         this.name = "";
         this.type = "";
         this.location = "";
-        this.owner = owner;
+        this.owner = null;
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
-    public Store() {
-        id = 0;
+    /*public Store() {
         this.name = "";
         this.type = "";
         this.location = "";
@@ -51,7 +51,7 @@ public class Store {
         this.owner = null;
         this.accepted = false;
         this.products = new ArrayList<Product>();
-    }
+    }*/
 
     public Integer getId() {
         return id;

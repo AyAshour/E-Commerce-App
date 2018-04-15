@@ -90,8 +90,8 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
-    @PostMapping("/getCartByUser")
-    ResponseEntity<?> getCart(User user){
+    @GetMapping("/getCartByUser")
+    ResponseEntity<?> getCart(@RequestBody  User user){
         return ResponseEntity.status(HttpStatus.OK).body(cartRepo.getCartByUser(user));
     }
 }

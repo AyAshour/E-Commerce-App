@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/store")
@@ -42,18 +44,17 @@ public class StoreController {
 //    }
 
     @PostMapping(path = "/addStore")
-    public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
-
-        store.setOwner(userRepo.findByUsername(ownerUsername)); // can i send it inside Store from the front end.
+    public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam("owner") String ownerUsername){
+        store.setOwner(userRepo.findByUsername(ownerUsername));
         storeRepo.save(store);
+        //store.setOwner(owner); // can i send it inside Store from the front end, so that i don't need to send it as a second parameter?
+       // storeRepo.save(store);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/acceptStore")
-    public ResponseEntity<?> acceptStore(@RequestParam Integer id){
+    public ResponseEntity<?> acceptStore(@RequestParam("id") Integer id){
         Store targetStore = storeRepo.findStoreById(id);
-        storeRepo.delete(targetStore); // to avoid duplicated data
-        targetStore.accepted=true;
         targetStore.setAccepted(true);
         storeRepo.save(targetStore);
         return ResponseEntity.ok().build();
@@ -84,13 +85,8 @@ public class StoreController {
             return ResponseEntity.status(HttpStatus.OK).body(stores);
     }
 
-    @PostMapping(path = "/addStoreObject")
-    public String addStore(@ModelAttribute("store") Store store){
-        storeRepo.save(store);
-        return "done!";
-    }
     @PostMapping("/addProductToStore")
-    ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
+    ResponseEntity<?> addProductToStore(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
         Store store = storeRepo.findStoreById(storeId);
 
         store.getProducts().add(product);
@@ -105,4 +101,12 @@ public class StoreController {
         return ResponseEntity.status(HttpStatus.OK).body(store);
     }
 
+    @GetMapping(path = "/getStoreProducts")
+    public ResponseEntity<?> getStoreProducts(Integer storeID){
+        List<Product> products = storeRepo.findStoreById(storeID).getProducts();
+        if(products.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
 }

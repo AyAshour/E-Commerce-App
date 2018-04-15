@@ -8,6 +8,7 @@ import {Observer} from "rxjs/Observer";
 @Injectable()
 export class StoreService {
   private baseURL: String = "http://localhost:8080/store/";
+  private currentSelected: object = null;
 
   constructor(private http: Http) { }
 
@@ -16,6 +17,23 @@ export class StoreService {
   }
 
   acceptStore(id){
-    this.http.post(this.baseURL+"acceptStore/{"+id+"}", id);
+    console.log("id: "+this.baseURL+"acceptStore?id="+id);
+    this.http.post(this.baseURL+"acceptStore?id="+id, {
+      parameters: {
+        id: id
+      }
+    });
   }
+  getStoreProducts(){
+    return this.http.get(this.baseURL+"/getStoreProducts").map(response => response.json());
+  }
+
+  setCurrentSelectedStore(){
+
+  }
+
+  getCurrentSelectedStore(){
+
+  }
+
 }
