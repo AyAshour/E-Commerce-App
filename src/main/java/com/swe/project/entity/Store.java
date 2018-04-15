@@ -98,7 +98,7 @@ public class Store {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-    public void addOwners(List <User> owners) {
+    public void addOwners(Set <User> owners) {
         this.owners.addAll(owners);
     }
 }
