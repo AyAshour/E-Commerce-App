@@ -37,9 +37,8 @@ public class BrandController {
         Integer mxOrderedBrand = 0;
         Brand ret = new Brand();
         for(Product p:products) {
-            Integer id = p.getBrandId();
-            Brand brand = brandRepo.getBrandById(id);
-            String name = brand.getName();
+            Brand brand = p.brand;
+            String name = brand.name;
             if(!mp.containsKey(name)) {
                 mp.put(name, 1);
             }

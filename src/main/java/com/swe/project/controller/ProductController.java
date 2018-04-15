@@ -17,8 +17,8 @@ public class ProductController {
 
 
     @PostMapping("/addProductToSystem")
-    public String addProduct(@RequestParam String name, @RequestParam String priceRange, @RequestParam double price, @RequestParam String category) {
-        productRepo.save(new Product(name, priceRange, price, category));
+    public String addProduct(@RequestParam String name, @RequestParam double price, @RequestParam String category) {
+        productRepo.save(new Product(name, price, category));
         return "done!";
     }
 
@@ -58,7 +58,7 @@ public class ProductController {
         Integer mxOrderedProduct = 0;
         Product ret = new Product();
         for (Product p : products) {
-            String name = p.getName();
+            String name = p.name;
             if (!mp.containsKey(name)) {
                 mp.put(name, 1);
             } else {

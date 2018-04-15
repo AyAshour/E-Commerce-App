@@ -14,8 +14,6 @@ public class Product {
 
     public String name;
     public double price;
-    public double low_range;
-    public double high_range;
     public String category;
     public boolean inStock;
 
@@ -26,20 +24,18 @@ public class Product {
     @ManyToMany
     public ArrayList<User> viewers;
 
-
+    @OneToMany
+    public User buyer;
 
     public Product() {
         this.id = 0;
         this.name = "";
-        this.low_range = this.high_range = 0;
         this.price = 0.0;
         this.category = "";
     }
 
-    public Product(String name, double low ,double high, double price, String category) {
+    public Product(String name, double price, String category) {
         this.name = name;
-        this.low_range = low;
-        this.high_range = high;
         this.price = price;
         this.category = category;
         this.inStock = true;

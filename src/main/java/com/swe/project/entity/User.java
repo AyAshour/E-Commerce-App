@@ -5,6 +5,7 @@ import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -18,10 +19,13 @@ public class User {
     private String password;
 
     @OneToMany
-    public ArrayList<Store> stores;
+    public List<Store> stores;
 
     @ManyToMany
-    public ArrayList<Product> viewedProducts;
+    public List<Product> viewedProducts;
+
+    @OneToMany
+    public List<Product> buyProducts;
 
     public User(String ownerUsername) {
         this.username=ownerUsername;
@@ -30,6 +34,10 @@ public class User {
         this.username = "";
         this.password = "";
     }
+
+
+
+
 
 
     public static enum userType {
