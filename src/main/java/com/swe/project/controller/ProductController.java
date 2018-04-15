@@ -83,5 +83,8 @@ public class ProductController {
         }
         return ret;
     }
-
+//    @PostMapping("/buyProduct")
+//    public String buyProduct() {
+//        Iterable<Product> products = getProducts();
+//    }
 }

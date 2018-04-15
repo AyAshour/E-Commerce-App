@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @EnableAutoConfiguration
@@ -18,9 +19,9 @@ public class Store {
     public String location;
     public boolean accepted;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "ownerId")
-    private User owner;
+    private Set<User> owners;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
     private List<Product> products;
@@ -30,7 +31,6 @@ public class Store {
         this.name = name;
         this.type = type;
         this.location = location;
-        this.owner = owner;
         this.accepted = false;
     }
     public Store(int id){
@@ -38,7 +38,6 @@ public class Store {
         this.name = "";
         this.type = "";
         this.location = "";
-        this.owner = owner;
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
@@ -48,7 +47,6 @@ public class Store {
         this.type = "";
         this.location = "";
 
-        this.owner = null;
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
@@ -77,12 +75,12 @@ public class Store {
         this.location = location;
     }
 
-    public User getOwner() {
-        return owner;
+    public Set<User> getOwners() {
+        return owners;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwner(Set<User> owners) {
+        this.owners = owners;
     }
 
     public boolean isAccepted() {
@@ -99,5 +97,8 @@ public class Store {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+    public void addOwners(Set <User> owners) {
+        this.owners.addAll(owners);
     }
 }
