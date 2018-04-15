@@ -3,11 +3,14 @@ package com.swe.project.controller;
 import com.swe.project.entity.Product;
 import com.swe.project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Optional;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/product")
 public class ProductController {
@@ -17,9 +20,10 @@ public class ProductController {
 
 
     @PostMapping("/addProductToSystem")
-    public String addProduct(@RequestParam String name, @RequestParam double price, @RequestParam String category) {
-        productRepo.save(new Product(name, price, category));
-        return "done!";
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        productRepo.save(product);
+        return ResponseEntity.ok().build();
+
     }
 
 
@@ -33,18 +37,26 @@ public class ProductController {
 
 
     @GetMapping(value = "/get")
-    public Product getProduct(@RequestParam Integer id) {
-        return productRepo.findProductById(id);
+    public ResponseEntity<?> getProduct(@RequestParam Integer id) {
+        Optional<Product> productOptional = productRepo.findById(id);
+        if(productOptional.isPresent())
+            return ResponseEntity.status(HttpStatus.OK).body(productOptional.get());
+        else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping(value = "/getAll")
-    public Iterable<Product> getAll() {
-        return productRepo.findAll();
+    public ResponseEntity<?> getAll() {
+        Iterable<Product> productsOptional = productRepo.findAll();
+        if(productsOptional.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(productsOptional);
     }
 
     @PostMapping(value = "/remove")
-    public void removeProduct(@RequestParam Integer id) {
+    public ResponseEntity<?> removeProduct(@RequestParam Integer id) {
         productRepo.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     public Iterable<Product> getProductsOutOfStock() {

@@ -4,6 +4,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 @EnableAutoConfiguration
@@ -14,16 +19,14 @@ public class Brand {
     public String name,category;
 
     @OneToMany
-    public ArrayList<Product> products;
+    public List<Product> products;
+
     public Brand(){
-        id=0;
         name="";
-        category="";
     }
-    public Brand(int id,String name,String category){
-        this.id= id;
+
+    public Brand(String name){
         this.name = name;
-        this.category= category;
     }
 
     public int getId() {
@@ -34,4 +37,13 @@ public class Brand {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }
+

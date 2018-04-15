@@ -5,7 +5,10 @@ import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+
 import java.util.List;
+
+import java.util.Set;
 
 
 @Entity
@@ -18,14 +21,19 @@ public class User {
     public String email;
     private String password;
 
+
     @OneToMany
-    public List<Store> stores;
+    public Set<Product> buyProducts;
+
+    public Set<Store> stores;
 
     @ManyToMany
-    public List<Product> viewedProducts;
+    public Set<Product> viewedProducts;
 
-    @OneToMany
-    public List<Product> buyProducts;
+    @OneToOne
+    @JoinColumn(name = "cartId")
+    private Cart cart;
+
 
     public User(String ownerUsername) {
         this.username=ownerUsername;
@@ -66,7 +74,6 @@ public class User {
 
 
 
-
     public User(userType type, String email, String username, String password) {
         this.type = type.getType();
         this.email = email;
@@ -81,7 +88,45 @@ public class User {
         this.password = "";
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Set<Store> getStores() {
+        return stores;
+    }
+
+    public void setStores(Set<Store> stores) {
+        this.stores = stores;
+    }
+
+    public Set<Product> getViewedProducts() {
+        return viewedProducts;
+    }
+
+    public void setViewedProducts(Set<Product> viewedProducts) {
+        this.viewedProducts = viewedProducts;
+    }
 
     public String getPassword() {
         return password;
@@ -89,5 +134,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

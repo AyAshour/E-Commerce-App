@@ -2,17 +2,18 @@ package com.swe.project.controller;
 
 import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
+import com.swe.project.entity.User;
+import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
+import com.swe.project.repository.UserRepository;
 import com.swe.project.service.StoreService;
-import javafx.util.Pair;
-import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-
-
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/store")
 public class StoreController {
@@ -21,8 +22,13 @@ public class StoreController {
     private StoreRepository storeRepo;
 
     @Autowired
-    private StoreService storeService;
+    private UserRepository userRepo;
 
+    @Autowired
+    private ProductRepository productRepo;
+
+    @Autowired
+    private StoreService storeService;
 
 
 //    @GetMapping(path = "/adminView")
@@ -34,36 +40,48 @@ public class StoreController {
 //        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",storeService.soldOutProducts(storeID)));
 //        return ret;
 //    }
+
     @PostMapping(path = "/addStore")
-    public String addStore(@RequestParam String name, @RequestParam String type, @RequestParam String location, @RequestParam String owner){
-        Store s = new Store(name, type, location, owner);
-        storeRepo.save(s);
-        return "done";
+    public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
+
+        store.setOwner(userRepo.findByUsername(ownerUsername)); // can i send it inside Store from the front end.
+        storeRepo.save(store);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/acceptStore")
-    public String acceptStore(@RequestParam Integer id){
+    public ResponseEntity<?> acceptStore(@RequestParam Integer id){
         Store targetStore = storeRepo.findStoreById(id);
         storeRepo.delete(targetStore); // to avoid duplicated data
         targetStore.accepted=true;
+        targetStore.setAccepted(true);
         storeRepo.save(targetStore);
-        return "done!";
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/unAcceptStore")
     @Transactional
-    public void unAcceptStore(@RequestParam Integer id){
+    public ResponseEntity<?> unAcceptStore(@RequestParam Integer id){
         storeRepo.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = "/getAcceptedStores")
-    public Iterable<Store> getAcceptedStores(){
-        return storeRepo.findStoresByAccepted(true);
+    public ResponseEntity<?> getAcceptedStores(){
+        Iterable<Store> stores = storeRepo.findStoresByAccepted(true);
+        if(stores.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(stores);
     }
 
     @GetMapping(path = "/getUnAcceptedStores")
-    public Iterable<Store> getUnAcceptedStores(){
-        return storeRepo.findStoresByAccepted(false);
+    public ResponseEntity<?> getUnAcceptedStores(){
+        Iterable<Store> stores = storeRepo.findStoresByAccepted(false);
+        if(stores.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(stores);
     }
 
     @PostMapping(path = "/addStoreObject")
@@ -71,4 +89,20 @@ public class StoreController {
         storeRepo.save(store);
         return "done!";
     }
+    @PostMapping("/addProductToStore")
+    ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
+        Store store = storeRepo.findStoreById(storeId);
+
+        store.getProducts().add(product);
+        storeRepo.save(store);
+
+        Integer addedQuantity = product.getQuantity();
+        Product existProduct = productRepo.findProductById(product.getId());
+        Integer existQuantity = existProduct.getQuantity();
+        existProduct.setQuantity(existQuantity + addedQuantity);
+        productRepo.save(existProduct);
+
+        return ResponseEntity.status(HttpStatus.OK).body(store);
+    }
+
 }

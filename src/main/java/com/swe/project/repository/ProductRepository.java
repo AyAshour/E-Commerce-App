@@ -12,7 +12,9 @@ import java.util.List;
 public interface ProductRepository extends CrudRepository<Product, Integer> {
 
     Iterable<Product> findAllByInStock(boolean inStock);
+
     Iterable<Product> findAllByStore(Store s);
 
     Product findProductById(Integer id);
+
 }
