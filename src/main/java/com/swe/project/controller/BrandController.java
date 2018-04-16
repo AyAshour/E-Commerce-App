@@ -15,19 +15,24 @@ import java.util.HashMap;
 @RestController
 @RequestMapping(value = "/brand")
 public class BrandController {
-    @Autowired
-    private BrandRepository brandRepo;
+
 
     @Autowired
     private ProductController productController;
+    private static BrandRepository brandRepository;
 
+    @Autowired
+    public BrandController(BrandRepository brandRepository) {
+        BrandController.brandRepository = brandRepository;
+
+    }
 
     @PostMapping("/addBrand")
     @ResponseBody
-    ResponseEntity<?> addBrand(@RequestParam  String brandName) {
-        if(!brandRepo.existsByName(brandName)) {
+    ResponseEntity<?> addBrand(@RequestParam String brandName) {
+        if (!brandRepository.existsByName(brandName)) {
             Brand brand = new Brand(brandName);
-            brandRepo.save(brand);
+            brandRepository.save(brand);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -35,42 +40,31 @@ public class BrandController {
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll() {
-        Iterable<Brand> brands = brandRepo.findAll();
-        if(brands.equals(null))
+        Iterable<Brand> brands = brandRepository.findAll();
+        if (brands.equals(null))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         else
             return ResponseEntity.status(HttpStatus.OK).body(brands);
     }
 
-
-
-  /*  @PostMapping("/viewMostOrdered" )
-    public Brand mostOrderedBrand() {
-        Iterable<Product> products = productController.getProductsOutOfStock();
+    public static Brand mostOrderedBrand() {
+        Iterable<Product> products = ProductController.getProductsOutOfStock();
         HashMap<String, Integer> mp = new HashMap<String, Integer>();
         Integer mxOrderedBrand = 0;
         Brand ret = new Brand();
-        for(Product p:products) {
-<<<<<<< HEAD
-            Brand brand = p.brand;
+        for (Product product : products) {
+            Brand brand = product.brand;
             String name = brand.name;
-=======
-            Integer id = p.getBrandId();
-            Brand brand = brandRepo.findById(id);
-            String name = brand.getName();
->>>>>>> e61d8fa615ed9c0f6042e9ebf623111e1caa8017
-            if(!mp.containsKey(name)) {
+            if (!mp.containsKey(name)) {
                 mp.put(name, 1);
+            } else {
+                mp.put(name, mp.get(name) + 1);
             }
-            else {
-                mp.put(name,mp.get(name)+1);
-            }
-            if(mxOrderedBrand<mp.get(name)){
-                mxOrderedBrand = Math.max(mxOrderedBrand,mp.get(name) );
+            if (mxOrderedBrand < mp.get(name)) {
+                mxOrderedBrand = Math.max(mxOrderedBrand, mp.get(name));
                 ret = brand;
             }
         }
         return ret;
     }
-*/
 }

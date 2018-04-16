@@ -1,7 +1,11 @@
 package com.swe.project.controller;
 
+import com.swe.project.entity.Brand;
+import com.swe.project.entity.Product;
 import com.swe.project.entity.User;
 import com.swe.project.entity.Store;
+import com.swe.project.repository.ProductRepository;
+import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,8 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private StoreRepository storeRepository;
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody User user) {
@@ -47,7 +53,7 @@ public class UserController {
     }
 
     @PostMapping("/addCollaborators")
-    public void addCollaborators(Set<String> usersID, String ownerID) {
+    public ResponseEntity<?> addCollaborators(Set<String> usersID, String ownerID) {
         List<User> users = new ArrayList<>();
         for (String ID : usersID) {
             users.add(userRepository.findByUsername(ID));
@@ -68,5 +74,25 @@ public class UserController {
             }
             owner.addCollaborators(owners);
         }
+        return ResponseEntity.ok().body(null);
+    }
+    @PostMapping("/ViewStatistics")
+    public ResponseEntity<?> ViewStatistics(Integer storeID) {
+        Store store = storeRepository.findStoreById(storeID);
+        Set<User> viewers = new HashSet<>();
+        Set<User> buyers = new HashSet<>();
+        Set<Product> soldOutProducts = new HashSet<>();
+        for(Product product:store.getProducts()) {
+            viewers.addAll(product.viewers);
+            if(product.inStock == false) {
+                buyers.add(product.buyer);
+                soldOutProducts.add(product);
+            }
+        }
+        Integer numberOfUsersViewedTheStoreProduct = viewers.size();
+        Integer numberOfUsersBuyTheStoreProducts = buyers.size();
+        Product mostOrderedProducts = ProductController.mostOrderedProduct();
+        Brand mostOrderedBrands = BrandController.mostOrderedBrand();
+        return ResponseEntity.ok().body(null);
     }
 }

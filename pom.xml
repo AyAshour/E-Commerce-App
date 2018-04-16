@@ -67,8 +67,12 @@
 			<artifactId>annotations</artifactId>
 			<version>RELEASE</version>
 		</dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>
