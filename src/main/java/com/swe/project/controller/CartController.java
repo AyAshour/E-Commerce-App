@@ -82,7 +82,6 @@ public class CartController {
         Cart cart = new Cart();
 
         cart.setUser(user);
-        cartRepo.save(cart);
 
         user.setCart(cart);
         userRepo.save(user);
