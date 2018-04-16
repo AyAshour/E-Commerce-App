@@ -3,13 +3,6 @@ package com.swe.project.entity;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
-
-import java.util.ArrayList;
-
-import java.util.List;
-
-import java.util.List;
-
 import java.util.Set;
 
 
@@ -27,7 +20,7 @@ public class User {
     @OneToMany
     public Set<Product> buyProducts;
 
-
+    @OneToMany
     public Set<User> collaborators;
 
     @OneToMany
