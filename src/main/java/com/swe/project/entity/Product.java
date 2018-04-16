@@ -30,9 +30,10 @@ public class Product {
     @JoinColumn(name = "brandId")
     public Brand brand;
 
+    @ManyToOne
+    public Store store;
 
-
-    @OneToMany
+    @OneToOne
     public User buyer;
 
     @ManyToMany

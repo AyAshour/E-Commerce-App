@@ -19,14 +19,11 @@ import java.util.Optional;
 @RequestMapping(value = "/product")
 public class ProductController {
 
-    private static ProductRepository productRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
-    public ProductController(ProductRepository productRepository) {
-        ProductController.productRepository = productRepository;
-    }
+    private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/addProductToSystem")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
@@ -58,10 +55,10 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    public static Iterable<Product> getProductsOutOfStock() {
+    public  Iterable<Product> getProductsOutOfStock() {
         return productRepository.findAllByInStock(false);
     }
-    public static Product mostOrderedProduct() {
+    public Product mostOrderedProduct() {
         Iterable<Product> products = getProductsOutOfStock();
         HashMap<String, Integer> mp = new HashMap<String, Integer>();
         Integer mxOrderedProduct = 0;

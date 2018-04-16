@@ -24,9 +24,13 @@ import java.util.Set;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private  UserRepository userRepository;
     @Autowired
-    private StoreRepository storeRepository;
+    private BrandController brandController;
+    @Autowired
+    private  StoreRepository storeRepository;
+    @Autowired
+    private ProductController productController;
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody User user) {
@@ -91,8 +95,8 @@ public class UserController {
         }
         Integer numberOfUsersViewedTheStoreProduct = viewers.size();
         Integer numberOfUsersBuyTheStoreProducts = buyers.size();
-        Product mostOrderedProducts = ProductController.mostOrderedProduct();
-        Brand mostOrderedBrands = BrandController.mostOrderedBrand();
+        Product mostOrderedProducts = productController.mostOrderedProduct();
+        Brand mostOrderedBrands = brandController.mostOrderedBrand();
         return ResponseEntity.ok().body(null);
     }
 }

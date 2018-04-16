@@ -16,16 +16,10 @@ import java.util.HashMap;
 @RequestMapping(value = "/brand")
 public class BrandController {
 
-
     @Autowired
     private ProductController productController;
-    private static BrandRepository brandRepository;
-
     @Autowired
-    public BrandController(BrandRepository brandRepository) {
-        BrandController.brandRepository = brandRepository;
-
-    }
+    private  BrandRepository brandRepository;
 
     @PostMapping("/addBrand")
     @ResponseBody
@@ -47,8 +41,8 @@ public class BrandController {
             return ResponseEntity.status(HttpStatus.OK).body(brands);
     }
 
-    public static Brand mostOrderedBrand() {
-        Iterable<Product> products = ProductController.getProductsOutOfStock();
+    public  Brand mostOrderedBrand() {
+        Iterable<Product> products = productController.getProductsOutOfStock();
         HashMap<String, Integer> mp = new HashMap<String, Integer>();
         Integer mxOrderedBrand = 0;
         Brand ret = new Brand();
