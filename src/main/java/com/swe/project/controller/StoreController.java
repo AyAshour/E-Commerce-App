@@ -1,10 +1,14 @@
 package com.swe.project.controller;
 
+import com.swe.project.actions.ActionHandler;
+import com.swe.project.actions.ActionHandlerFactory;
 import com.swe.project.entity.*;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
+import com.swe.project.service.AddProductService;
 import com.swe.project.service.ProductDiscountService;
+import com.swe.project.service.ShowActionsService;
 import com.swe.project.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +43,40 @@ public class StoreController {
 //        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",storeService.soldOutProducts(storeID)));
 //        return ret;
 //    }
+    @Autowired
+    private ShowActionsService showActionsService;
+
+    @GetMapping(value = "/showActions")
+    public ResponseEntity<?>  showActions(@RequestParam("ownerUserName") String ownerUserName, @RequestParam("storeId") Integer storeId){
+        Store store = storeRepo.findStoreById(storeId);
+        User owner = store.getOwner();
+
+        if(! ownerUserName.equals(owner.getUsername())){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok().body(showActionsService.showActions(storeId));
+    }
+
+    private ActionHandlerFactory actionHandlerFactory;
+    private ActionHandler actionHandler;
+
+
+    // This function just remove action from database
+    @PostMapping(value = "/undoAction")
+    public ResponseEntity<?>  undoAction(@RequestBody Action action, @RequestParam("ownerUserName") String ownerUserName){
+        Store store = storeRepo.findStoreById(action.getStore().getId());
+        User owner = store.getOwner();
+
+        if(! ownerUserName.equals(owner.getUsername())){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        actionHandler = actionHandlerFactory.getHandler(action.getAffectedObject());
+
+        actionHandler.undoAction(action);
+
+        return ResponseEntity.ok().build();
+    }
+
 
     @PostMapping(path = "/addStore")
     public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
@@ -90,48 +128,14 @@ public class StoreController {
     }
     @PostMapping("/addProductToStore")
     ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
-        Store store = storeRepo.findStoreById(storeId);
-
-        store.getProducts().add(product);
-        storeRepo.save(store);
-
-        Integer addedQuantity = product.getQuantity();
-        Product existProduct = productRepo.findProductById(product.getId());
-        Integer existQuantity = existProduct.getQuantity();
-        existProduct.setQuantity(existQuantity + addedQuantity);
-        productRepo.save(existProduct);
-        Action action = new ProductActions( product);
-        action.setStore(store);
-        action.setType("insert");
-        ActionController actionController = new ProductActionsController();
-        actionController.Add(action);
-        return ResponseEntity.status(HttpStatus.OK).body(store);
+        AddProductService addProductService = new AddProductService();
+        addProductService.addProduct(product, storeId);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping("/removeProductFromStore")
     ResponseEntity<?> removeProduct(@RequestBody Product product, @RequestParam Integer storeId, @RequestParam User originalOwner){
-        Store store = storeRepo.findStoreById(storeId);
-        Product productinSystem = productRepo.findProductById(product.getId());
-        if(originalOwner.equals(store.getOwner())){
-            for(Product p : store.getProducts()){
-                if(p.equals(product)){
 
-                    store.getProducts().remove(p);
-                    storeRepo.save(store);
-
-                    productinSystem.setQuantity(productinSystem.getQuantity() - p.getQuantity());
-                    productRepo.save(productinSystem);
-
-                    Action action = new ProductActions(product);
-                    action.setStore(store);
-                    action.setType("delete");
-                    ActionController actionController = new ProductActionsController();
-                    actionController.remove(action);
-
-                    return ResponseEntity.ok().build();
-                }
-            }
-        }
         return ResponseEntity.badRequest().build();
     }
     ProductDiscountService productDiscountService;

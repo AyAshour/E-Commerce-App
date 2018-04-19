@@ -14,6 +14,7 @@ public class User {
 
     @Id
     public String username;
+
     public String type;
     public String email;
     private String password;
@@ -141,4 +142,5 @@ public class User {
     public void setCart(Cart cart) {
         this.cart = cart;
     }
+
 }

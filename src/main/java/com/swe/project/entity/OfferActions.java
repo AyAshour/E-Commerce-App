@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class OfferActions extends Action{
+    private static final String AFFECTED_OBJECT = "offer";
 
     double offer;
 
@@ -13,5 +14,6 @@ public class OfferActions extends Action{
 
     public void setOffer(double offer) {
         this.offer = offer;
+        this.affectedObject = AFFECTED_OBJECT;
     }
 }

@@ -6,12 +6,15 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class ProductActions extends Action{
+    private static final String AFFECTED_OBJECT = "product";
 
     @ManyToOne
     @JoinColumn(name = "Product")
     Product product;
 
+    public ProductActions() {
 
+    }
 
     public Product getProduct() {
         return product;
@@ -23,5 +26,6 @@ public class ProductActions extends Action{
 
     public ProductActions(Product product) {
         this.product = product;
+        this.affectedObject = AFFECTED_OBJECT;
     }
 }

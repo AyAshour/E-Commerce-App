@@ -12,6 +12,8 @@ public abstract class  Action {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    protected String affectedObject;
+
     @ManyToOne
     @JoinColumn(name = "storeId")
     private  Store store;
@@ -61,5 +63,13 @@ public abstract class  Action {
 
     public void setOriginalStoreOwner(User originalStoreOwner) {
         OriginalStoreOwner = originalStoreOwner;
+    }
+
+    public String getAffectedObject() {
+        return affectedObject;
+    }
+
+    public void setAffectedObject(String affectedObject) {
+        this.affectedObject = affectedObject;
     }
 }
