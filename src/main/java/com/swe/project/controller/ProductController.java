@@ -4,6 +4,7 @@ import com.swe.project.entity.Product;
 import com.swe.project.entity.User;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.UserRepository;
+import javassist.compiler.ast.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.Null;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -55,27 +55,37 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    public  Iterable<Product> getProductsOutOfStock() {
+    public Iterable<Product> getProductsOutOfStock() {
         return productRepository.findAllByInStock(false);
     }
-    public Product mostOrderedProduct() {
+
+    public Set<String> orderedProducts(int X, int addedValue) {
         Iterable<Product> products = getProductsOutOfStock();
         HashMap<String, Integer> mp = new HashMap<String, Integer>();
-        Integer mxOrderedProduct = 0;
-        Product ret = new Product();
+        PriorityQueue<javafx.util.Pair<Integer, String>> productsOrdered = new PriorityQueue<>();
         for (Product p : products) {
             String name = p.name;
             if (!mp.containsKey(name)) {
-                mp.put(name, 1);
+                mp.put(name, addedValue);
             } else {
-                mp.put(name, mp.get(name) + 1);
-            }
-            if (mxOrderedProduct < mp.get(name)) {
-                mxOrderedProduct = Math.max(mxOrderedProduct, mp.get(name));
-                ret = p;
+                mp.put(name, mp.get(name) + addedValue);
             }
         }
+        Set<String> ret = new HashSet<>();
+        for (Map.Entry<String, Integer> pair : mp.entrySet()) {
+            if (ret.size() == X)
+                break;
+            ret.add(pair.getKey());
+        }
         return ret;
+    }
+
+    public Set<String> mostOrderedProducts(int X) {
+        return orderedProducts(X, 1);
+    }
+
+    public Set<String> leastOrderedProducts(int X) {
+        return orderedProducts(X, -1);
     }
 
     @PostMapping("/viewProduct")

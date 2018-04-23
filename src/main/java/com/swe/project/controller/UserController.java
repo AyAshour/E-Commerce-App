@@ -25,12 +25,10 @@ public class UserController {
 
     @Autowired
     private  UserRepository userRepository;
-    @Autowired
-    private BrandController brandController;
+
     @Autowired
     private  StoreRepository storeRepository;
-    @Autowired
-    private ProductController productController;
+
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody User user) {
@@ -80,23 +78,6 @@ public class UserController {
         }
         return ResponseEntity.ok().body(null);
     }
-    @PostMapping("/ViewStatistics")
-    public ResponseEntity<?> ViewStatistics(Integer storeID) {
-        Store store = storeRepository.findStoreById(storeID);
-        Set<User> viewers = new HashSet<>();
-        Set<User> buyers = new HashSet<>();
-        Set<Product> soldOutProducts = new HashSet<>();
-        for(Product product:store.getProducts()) {
-            viewers.addAll(product.viewers);
-            if(product.inStock == false) {
-                buyers.add(product.buyer);
-                soldOutProducts.add(product);
-            }
-        }
-        Integer numberOfUsersViewedTheStoreProduct = viewers.size();
-        Integer numberOfUsersBuyTheStoreProducts = buyers.size();
-        Product mostOrderedProducts = productController.mostOrderedProduct();
-        Brand mostOrderedBrands = brandController.mostOrderedBrand();
-        return ResponseEntity.ok().body(null);
-    }
+
+
 }
