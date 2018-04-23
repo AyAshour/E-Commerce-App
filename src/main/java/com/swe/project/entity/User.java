@@ -1,5 +1,7 @@
 package com.swe.project.entity;
 
+import com.swe.project.repository.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
@@ -40,13 +42,20 @@ public class User {
     @JoinColumn(name = "cartId")
     private Cart cart;
 
-
     public User(String ownerUsername) {
         this.username = ownerUsername;
         this.type = userType.customer.getType();
         this.email = "";
-        this.username = "";
         this.password = "";
+        cart = new Cart(this,null);
+        cartRepository.save(cart);
+    }
+    public User(){
+        this.username = "";
+        this.type= "";
+        this.email  = "";
+        this.password = "";
+
     }
 
 

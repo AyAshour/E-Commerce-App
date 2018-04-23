@@ -2,6 +2,7 @@ package com.swe.project.controller;
 
 import com.swe.project.entity.User;
 import com.swe.project.entity.Store;
+import com.swe.project.repository.CartRepository;
 import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,17 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping(value = "/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private CartController  cartController;
+    @PostMapping("/register")
+    public  ResponseEntity<?> register(@RequestBody  User user) {
+        System.out.println(user.username);
         if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername()))
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); // CONFLICT or BAD_REQUEST ?
-        userRepository.save(user);
+        cartController.assignCartToUser(user);
         return ResponseEntity.ok().body(user);
     }
 

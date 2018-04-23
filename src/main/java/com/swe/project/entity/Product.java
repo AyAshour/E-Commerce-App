@@ -26,13 +26,16 @@ public class Product {
     public double price;
     public boolean inStock;
     public Integer quantity;
+
     @ManyToOne
     @JoinColumn(name = "brandId")
     public Brand brand;
 
+    @ManyToOne
+    public Store store;
 
 
-    @OneToMany
+    @ManyToOne
     public User buyer;
 
     @ManyToMany
@@ -52,8 +55,7 @@ public class Product {
 
 
 
-    public Product(String name, double price, Category category, Integer quantity, Brand brand) {
-
+    public Product(String name, double price, Category category, Integer quantity, Brand brand,Store s) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
