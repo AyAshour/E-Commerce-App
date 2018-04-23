@@ -18,14 +18,13 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepo;
-    @Autowired
-    ProductService productService;
+    private ProductService productService;
+
     ShippingService shippingService;
 
     @PostMapping("/addProductToSystem")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
-        productRepo.save(product);
+        productService.addProduct(product);
         return ResponseEntity.ok().build();
     }
 
@@ -41,15 +40,15 @@ public class ProductController {
 
     @GetMapping(value = "/get")
     public ResponseEntity<?> getProduct(@RequestParam Integer id) {
-        Optional<Product> productOptional = productRepo.findById(id);
-        if(productOptional.isPresent())
-            return ResponseEntity.status(HttpStatus.OK).body(productOptional.get());
+        Product product = productService.getProductById(id);
+        if(product != null)
+            return ResponseEntity.status(HttpStatus.OK).body(product);
         else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll() {
-        Iterable<Product> productsOptional = productRepo.findAll();
+        Iterable<Product> productsOptional = productService.getAll();
         if(productsOptional.equals(null))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         else
@@ -58,12 +57,12 @@ public class ProductController {
 
     @PostMapping(value = "/remove")
     public ResponseEntity<?> removeProduct(@RequestParam Integer id) {
-        productRepo.deleteById(id);
+        productService.removeProduct(id);
         return ResponseEntity.ok().build();
     }
 
     public Iterable<Product> getProductsOutOfStock() {
-        return productRepo.findAllByInStock(false);
+        return productService.getProductsOutOfStock();
     }
 
     @PostMapping("/viewMostOrdered")

@@ -12,13 +12,80 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 @Service
 public class StoreService {
-     private UserRepository userRepository;
+
+     @Autowired
      private StoreRepository storeRepository;
-     private ProductRepository productRepository;
+
+     @Autowired
+     private ProductService productService;
+
+     public Store getStoreById(Integer storeId){
+         return storeRepository.findStoreById(storeId);
+     }
+
+     public void addStore(Store store){
+         storeRepository.save(store);
+     }
+
+     //public boolean addStore
+
+
+    public Store addProduct(Product product, Integer storeId){
+        Store store = storeRepository.findStoreById(storeId);
+
+        Product existProduct = productService.getProductById(product.getId());
+        if(existProduct == null)
+            return null;
+
+        List<Product> products =  store.getProducts();
+        products.add(product);
+        store.setProducts(products);
+        storeRepository.save(store);
+
+        Integer addedQuantity = product.getQuantity();
+
+        Integer existQuantity = existProduct.getQuantity();
+        existProduct.setQuantity(existQuantity + addedQuantity);
+        productService.addProduct(product);
+
+        return store;
+    }
+    public Store remove( Product product, Store store){
+
+        Product productInSystem = productService.getProductById(product.getId());
+        List<Product> storeProducts =   store.getProducts();
+        for(Product p : storeProducts){
+            if(p.equals(product)){
+
+                storeProducts.remove(p);
+                store.setProducts(storeProducts);
+
+                storeRepository.save(store);
+
+                productInSystem.setQuantity(productInSystem.getQuantity() - p.getQuantity());
+                productService.addProduct(productInSystem);
+
+                return store;
+            }
+        }
+        return null;
+    }
+
+    public void deleteStore(Store store){
+         storeRepository.delete(store);
+    }
+    public void deleteStoreById(Integer storeId){
+        storeRepository.deleteById(storeId);
+    }
+    public Iterable<Store> findByAccepted(boolean accepted){
+         return storeRepository.findStoresByAccepted(accepted);
+    }
+
 
 //    @Autowired
 //    StoreProductsRepository storeProductsDP;

@@ -2,7 +2,7 @@ package com.swe.project.actions;
 
 import com.swe.project.entity.Action;
 import com.swe.project.entity.ProductActions;
-import com.swe.project.service.ActionsServices;
+import com.swe.project.service.ActionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ public class ProductActionHandler implements ActionHandler {
     private static final String HANDLER_ID = "product";
 
     @Autowired
-    private ActionsServices productActionsService;
+    private ActionsService productActionsService;
 
     TypeHandler typeHandler;
 

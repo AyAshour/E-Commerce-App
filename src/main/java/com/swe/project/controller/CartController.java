@@ -7,30 +7,32 @@ import com.swe.project.repository.CartRepository;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
+import com.swe.project.service.CartService;
+import com.swe.project.service.ProductService;
+import com.swe.project.service.StoreService;
+import com.swe.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/cart")
 public class CartController {
+    @Autowired
+    private CartService cartService;
 
     @Autowired
-    private CartRepository cartRepo;
+    StoreService storeService;
 
     @Autowired
-    private UserRepository userRepo;
+    ProductService productService;
 
     @Autowired
-    private StoreRepository storeRepo;
-
-    @Autowired
-    private ProductRepository productRepo;
+    UserService userService;
 
     @PostMapping("/buyProducts")
     ResponseEntity<?> buyProducts(@RequestBody Cart cart)
@@ -41,19 +43,19 @@ public class CartController {
           Integer productId = product.getId();
 
           Integer storeId = storeProduct.getKey();
-          Store store = storeRepo.findStoreById(storeId);
+          Store store = storeService.getStoreById(storeId);
 
           Integer productQtyInCart = product.getQuantity();
-          Integer oldQtyInSystem = productRepo.findProductById(productId).getQuantity();
-          productRepo.findProductById(productId).setQuantity(oldQtyInSystem-productQtyInCart);
+          Integer oldQtyInSystem = productService.getProductById(productId).getQuantity();
+          productService.getProductById(productId).setQuantity(oldQtyInSystem-productQtyInCart);
          for(Product p : store.getProducts() ){
              if(p.getId() == productId){
                  Integer oldQtyInStore = p.getQuantity();
                  p.setQuantity(oldQtyInStore-productQtyInCart);
              }
          }
-         storeRepo.save(store);
-         productRepo.save(product);
+         storeService.addStore(store);
+         productService.addProduct(product);
       }
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
@@ -78,28 +80,26 @@ public class CartController {
               totalPrice = discount.applyDiscount(totalPrice);
          }
 */
-
-
         return ResponseEntity.status(HttpStatus.OK).body(totalPrice);
     }
 
 
     @PostMapping("/addProduct")
     ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam Integer cartId, @RequestParam Integer storeId){
-        Cart cart = cartRepo.getCartById(cartId);
+        Cart cart = cartService.getCartById(cartId);
 
         cart.getProducts().put(storeId, product);
-        cartRepo.save(cart);
+        cartService.addCart(cart);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
     @PostMapping("/removeProduct")
     ResponseEntity<?> removeProductFromCart(@RequestBody Product product, @RequestParam Integer cartId){
-        Cart cart = cartRepo.getCartById(cartId);
+        Cart cart = cartService.getCartById(cartId);
 
         cart.getProducts().remove(product);
-        cartRepo.save(cart);
+        cartService.addCart(cart);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
@@ -109,16 +109,16 @@ public class CartController {
         Cart cart = new Cart();
 
         cart.setUser(user);
-        cartRepo.save(cart);
+        cartService.addCart(cart);
 
         user.setCart(cart);
-        userRepo.save(user);
+        userService.saveUser(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
     @PostMapping("/getCartByUser")
     ResponseEntity<?> getCart(User user){
-        return ResponseEntity.status(HttpStatus.OK).body(cartRepo.getCartByUser(user));
+        return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartByUser(user));
     }
 }

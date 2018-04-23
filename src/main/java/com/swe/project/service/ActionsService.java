@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ActionsServices {
+public class ActionsService {
 
     @Autowired
     ActionRepository actionRepository;
@@ -22,5 +22,13 @@ public class ActionsServices {
     public Iterable<Action> showActions(Integer storeId){
         Iterable<Action> actions = actionRepository.findAllById(storeId);
         return actions;
+    }
+
+    public void saveAction(Action action){
+        actionRepository.save(action);
+    }
+
+    public Action getActionById(Integer actionId) {
+        return actionRepository.findActionById(actionId);
     }
 }

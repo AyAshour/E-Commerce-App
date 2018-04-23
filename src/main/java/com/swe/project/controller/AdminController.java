@@ -1,12 +1,10 @@
 package com.swe.project.controller;
 
-import com.swe.project.entity.Brand;
-import com.swe.project.entity.Product;
-import com.swe.project.entity.User;
 import com.swe.project.repository.BrandRepository;
 import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin")

@@ -4,35 +4,41 @@ import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ProductService {
-    StoreRepository storeRepo;
-    ProductRepository productRepo;
-    public Store addProduct(Product product, Integer storeId){
-        Store store = storeRepo.findStoreById(storeId);
 
-        Product existProduct = productRepo.findProductById(product.getId());
-        if(existProduct == null)
-            return null;
+    @Autowired
+    private ProductRepository productRepo;
 
-        List<Product> products =  store.getProducts();
-        products.add(product);
-        store.setProducts(products);
-        storeRepo.save(store);
-
-        Integer addedQuantity = product.getQuantity();
-
-        Integer existQuantity = existProduct.getQuantity();
-        existProduct.setQuantity(existQuantity + addedQuantity);
-        productRepo.save(existProduct);
-
-        return store;
+    public void addProduct(Product product){
+        productRepo.save(product);
     }
+
+    public Product getProductById(Integer productId){
+        return productRepo.findProductById(productId);
+    }
+
+    public Iterable<Product> getAll(){
+        return productRepo.findAll();
+    }
+
+    public void removeProduct(Integer productId){
+        productRepo.deleteById(productId);
+    }
+
+    public Iterable<Product> getProductsOutOfStock() {
+        return productRepo.findAllByInStock(false);
+    }
+
+
     public double buyProduct(Product product, Integer quantity)
     {
 
@@ -51,25 +57,5 @@ public class ProductService {
 
         product.setPrice(discount * product.getPrice());
         productRepo.save(product);
-    }
-    public void remove( Product product, Store store){
-
-        //Store store = storeRepo.findStoreById(storeId);
-        Product productInSystem = productRepo.findProductById(product.getId());
-        List<Product> storeProducts =   store.getProducts();
-        for(Product p : storeProducts){
-            if(p.equals(product)){
-
-                storeProducts.remove(p);
-                store.setProducts(storeProducts);
-
-                storeRepo.save(store);
-
-                productInSystem.setQuantity(productInSystem.getQuantity() - p.getQuantity());
-                productRepo.save(productInSystem);
-
-                return;
-            }
-        }
     }
 }

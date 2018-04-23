@@ -12,6 +12,8 @@ public abstract class  Action {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    private Integer actionId=1;
+
     protected String affectedObject;
 
     @ManyToOne
@@ -22,7 +24,7 @@ public abstract class  Action {
     @JoinColumn(name = "User")
     private User OriginalStoreOwner;
 
-    public String type;
+    private String type;
 
     //List<Action>
     public static enum ActionType {
