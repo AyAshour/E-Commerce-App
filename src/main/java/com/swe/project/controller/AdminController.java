@@ -21,7 +21,7 @@ public class AdminController {
     @Autowired
     UserRepository userRepo;
 
-  /*  boolean isAdmin(Integer id){
+   /* boolean isAdmin(Integer id){
         User user = userRepo.findUserById(id);
         if(user.isAdmin())
             return true;
@@ -31,7 +31,7 @@ public class AdminController {
     public boolean addProduct(@PathVariable Integer id, @RequestParam String name, @RequestParam String category, @RequestParam String priceRange, @RequestParam double price) {
         if (isAdmin(id)) {
             Product p = new Product(name, priceRange, price, category);
-            pc.addProduct(p);
+            p.addProduct(p);
             return true;
         }
         return false;

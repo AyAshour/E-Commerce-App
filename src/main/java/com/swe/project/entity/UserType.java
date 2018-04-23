@@ -3,7 +3,7 @@ package com.swe.project.entity;
 import javax.persistence.*;
 
 @Entity
-public class userType {
+public class UserType {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
    Integer id;
@@ -35,4 +35,8 @@ public class userType {
             return null;
         }
     }
+  public String  getType(){
+        return typeUser.customer.getType();
+  }
+
 }

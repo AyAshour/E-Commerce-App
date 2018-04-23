@@ -8,18 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductActionsService {
-    @Autowired
-    ProductActionsRepository productActionsRepo ;
+public class ActionsServices {
+
     @Autowired
     ActionRepository actionRepository;
 
     public void addAction(ProductActions productActions){
-        productActionsRepo.save(productActions);
         actionRepository.save((Action)productActions);
     }
     public void removeAction(ProductActions action){
-        productActionsRepo.delete(action);
         actionRepository.delete(action);
+    }
+    public Iterable<Action> showActions(Integer storeId){
+        Iterable<Action> actions = actionRepository.findAllById(storeId);
+        return actions;
     }
 }

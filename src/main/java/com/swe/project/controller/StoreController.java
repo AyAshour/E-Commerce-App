@@ -2,14 +2,14 @@ package com.swe.project.controller;
 
 import com.swe.project.actions.ActionHandler;
 import com.swe.project.actions.ActionHandlerFactory;
-import com.swe.project.actions.ProductActionHandler;
 import com.swe.project.entity.*;
 import com.swe.project.repository.ActionRepository;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
-import com.swe.project.service.ProductDiscountService;
-import com.swe.project.service.ShowActionsService;
+import com.swe.project.service.ActionsServices;
+import com.swe.project.service.CartService;
+import com.swe.project.service.ProductService;
 import com.swe.project.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,7 +51,10 @@ public class StoreController {
 //        return ret;
 //    }
     @Autowired
-    private ShowActionsService showActionsService;
+    private ActionsServices actionsServices;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping(value = "/showActions")
     public ResponseEntity<?>  showActions(@RequestParam("ownerUserName") String ownerUserName, @RequestParam("storeId") Integer storeId){
@@ -61,7 +64,7 @@ public class StoreController {
         if(! ownerUserName.equals(owner.getUsername())){
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }*/
-        return ResponseEntity.ok().body(showActionsService.showActions(storeId));/*
+        return ResponseEntity.ok().body(actionsServices.showActions(storeId));/*
         showActionsService.showActions(storeId);
         return  ResponseEntity.ok().build();*/
     }
@@ -78,7 +81,6 @@ public class StoreController {
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         actionHandler = actionHandlerFactory.getHandler(action.getAffectedObject());
-
         actionHandler.undoAction(action);
 
         return ResponseEntity.ok().build();
@@ -133,49 +135,23 @@ public class StoreController {
         storeRepo.save(store);
         return "done!";
     }
-   /* @PostMapping("/addProductToStore")
-    ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
-        AddProductService addProductService = new AddProductService();
-        Store store = addProductService.addProduct(product, storeId);
 
-
-        Action action = new ProductActions(product);
-        action.setStore(store);
-        action.setType("insertProduct");
-
-        actionHandler = actionHandlerFactory.getHandler("product");
-        actionHandler.doAction(action );
-
-        return ResponseEntity.ok().build();
-    }
-*/
     @PostMapping("/addProductToStore")
     ResponseEntity<?> addProductToStore(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
-        Store store = storeRepo.findStoreById(storeId);
+       Store store = productService.addProduct(product, storeId);
 
-        Product existProduct = productRepo.findProductById(product.getId());
-        if(existProduct == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there is no product with this id , please contact admin!");
+       if(store == null)
+           ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there is no product with this id , please contact admin!");
+       else {
+           Action action = new ProductActions(product);
+           action.setStore(store);
+           action.setType("insertProduct");
 
-        List<Product> products =  store.getProducts();
-        products.add(product);
-        store.setProducts(products);
-        storeRepo.save(store);
+           actionHandler = actionHandlerFactory.getHandler("product");
+           actionHandler.doAction(action);
+       }
+       return ResponseEntity.status(HttpStatus.OK).body(store);
 
-        Integer addedQuantity = product.getQuantity();
-
-        Integer existQuantity = existProduct.getQuantity();
-        existProduct.setQuantity(existQuantity + addedQuantity);
-        productRepo.save(existProduct);
-
-        Action action = new ProductActions(product);
-        action.setStore(store);
-        action.setType("insertProduct");
-
-        actionHandler = actionHandlerFactory.getHandler("product");
-        actionHandler.doAction(action);
-
-        return ResponseEntity.status(HttpStatus.OK).body(store);
     }
 
 
@@ -186,10 +162,9 @@ public class StoreController {
     }
 
 
-    ProductDiscountService productDiscountService;
     @PostMapping("/addDiscountToProduct")
     public ResponseEntity<?> addDiscount(@RequestBody Product product, @RequestParam double discount) {
-        productDiscountService.ApplyDiscount(product, discount);
+        productService.ApplyDiscount(product, discount);
         return ResponseEntity.ok().build();
     }
 }

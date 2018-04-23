@@ -1,9 +1,8 @@
 package com.swe.project.controller;
 
-import com.swe.project.entity.Cart;
-import com.swe.project.entity.Product;
-import com.swe.project.entity.Store;
-import com.swe.project.entity.User;
+import com.swe.project.discounts.Discount;
+import com.swe.project.discounts.DiscountFactory;
+import com.swe.project.entity.*;
 import com.swe.project.repository.CartRepository;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
@@ -58,6 +57,32 @@ public class CartController {
       }
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
+
+    @Autowired
+    private DiscountFactory discountFactory;
+
+    @GetMapping("/calculatePrice")
+    ResponseEntity<?> calculatePrice(@RequestBody User user, @RequestBody Cart cart){
+        double totalPrice = 0;
+
+        // calculate price without discount
+        for(Map.Entry<Integer, Product> storeProduct : cart.getProducts().entrySet()){
+            totalPrice += storeProduct.getValue().getPrice();
+        }
+
+        // apply discount on price
+        Discount discount;
+
+         /*for(UserType u : user.getUserRoles()){
+              discount = discountFactory.getDiscount();
+              totalPrice = discount.applyDiscount(totalPrice);
+         }
+*/
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(totalPrice);
+    }
+
 
     @PostMapping("/addProduct")
     ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam Integer cartId, @RequestParam Integer storeId){

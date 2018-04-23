@@ -1,12 +1,9 @@
 package com.swe.project.entity;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.jmx.export.naming.IdentityNamingStrategy;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @EnableAutoConfiguration
@@ -29,20 +26,27 @@ public class User {
     @JoinColumn(name = "cartId")
     private Cart cart;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
-    private Set<userType> userRoles;
+   /* @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+    private List<UserType> userRoles;
 
+    public List<UserType> getUserRoles() {
+        return userRoles;
+    }
 
-    public User(userType type, String email, String username, String password, Set<userType> userTypeset) {
+    public void setUserRoles(List<UserType> userRoles) {
+        this.userRoles = userRoles;
+    }*/
+
+    public User(UserType type, String email, String username, String password, List<UserType> userTypeset) {
        // this.type = type.getType();
         this.email = email;
         this.username = username;
         this.password = password;
-        userRoles = userTypeset;
+       // userRoles = userTypeset;
     }
 
     public User() {
-      //  this.type = userType.customer.getType();
+      //  this.type = UserType.customer.getType();
         this.email = "";
         this.username = "";
         this.password = "";

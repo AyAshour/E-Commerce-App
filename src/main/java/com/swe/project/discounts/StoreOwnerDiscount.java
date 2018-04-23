@@ -1,5 +1,6 @@
 package com.swe.project.discounts;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -10,10 +11,11 @@ public class StoreOwnerDiscount implements Discount{
     private static final String OWNER_ID = "owner";
     private static final double VALUE = 0.1;
 
-    private DiscountFactory discountFactory;
 
-    @Override
-    @PostConstruct
+@Autowired
+private DiscountFactory discountFactory;
+
+@PostConstruct
     public void selfRegister() {
         discountFactory.addDiscount(OWNER_ID, this);
     }
