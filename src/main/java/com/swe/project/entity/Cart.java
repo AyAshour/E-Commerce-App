@@ -18,7 +18,9 @@ public class Cart {
     @OneToMany(targetEntity = Product.class)
     Map<Integer,Product> products;
 
-
+    @OneToOne
+    @JoinColumn(name = "price")
+    CartPrice price;
 
     public Cart() {
         this.user = null;
@@ -52,5 +54,13 @@ public class Cart {
 
     public void setProduct(Map<Integer, Product> products) {
         this.products = products;
+    }
+
+    public CartPrice getPrice() {
+        return price;
+    }
+
+    public void setPrice(CartPrice price) {
+        this.price = price;
     }
 }

@@ -15,7 +15,7 @@ import javax.persistence.Id;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer brandId;
     public String name,category;
 
     @OneToMany
@@ -30,11 +30,11 @@ public class Brand {
     }
 
     public int getId() {
-        return id;
+        return brandId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.brandId = id;
     }
 
     public String getName() {

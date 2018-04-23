@@ -4,6 +4,7 @@ import com.swe.project.entity.Brand;
 import com.swe.project.entity.Product;
 import com.swe.project.repository.BrandRepository;
 import com.swe.project.repository.ProductRepository;
+import com.swe.project.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,25 +22,19 @@ public class BrandController {
     @Autowired
     private ProductController productController;
 
+    @Autowired
+    private BrandService brandService;
+
 
     @PostMapping("/addBrand")
     @ResponseBody
     ResponseEntity<?> addBrand(@RequestParam  String brandName) {
-        if(!brandRepo.existsByName(brandName)) {
-            Brand brand = new Brand(brandName);
-            brandRepo.save(brand);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return brandService.addBrand(brandName);
     }
 
     @GetMapping(value = "/getAll")
-    public ResponseEntity<?> getAll() {
-        Iterable<Brand> brands = brandRepo.findAll();
-        if(brands.equals(null))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(brands);
+    public ResponseEntity<?> getAllBrands() {
+        return brandService.getAllBrands();
     }
 
 

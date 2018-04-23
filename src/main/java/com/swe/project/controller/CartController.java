@@ -1,19 +1,19 @@
 package com.swe.project.controller;
 
+
 import com.swe.project.entity.Cart;
 import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
 import com.swe.project.entity.User;
-import com.swe.project.repository.CartRepository;
 import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
+import com.swe.project.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -22,7 +22,7 @@ import java.util.Map;
 public class CartController {
 
     @Autowired
-    private CartRepository cartRepo;
+    private CartService cartService;
 
     @Autowired
     private UserRepository userRepo;
@@ -57,22 +57,46 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
+
+    @GetMapping("/calculatePrice")
+    ResponseEntity<?> calculatePrice(@RequestBody User user, @RequestBody Cart cart){
+        double totalPrice = 0;
+
+        // calculate price without discount
+        for(Map.Entry<Integer, Product> storeProduct : cart.getProducts().entrySet()){
+            totalPrice += storeProduct.getValue().getPrice();
+        }
+
+        // apply discount on price
+
+       /*
+         for(UserType userType : user.getTypes()){
+              discount = discountFactory.getDiscount("");
+              totalPrice = discount.applyDiscount(totalPrice);
+         }
+
+       */
+
+        return ResponseEntity.status(HttpStatus.OK).body(totalPrice);
+    }
+
+
     @PostMapping("/addProduct")
     ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam Integer cartId, @RequestParam Integer storeId){
-        Cart cart = cartRepo.getCartById(cartId);
+        Cart cart = cartService.getCartById(cartId);
 
         cart.getProducts().put(storeId, product);
-        cartRepo.save(cart);
+        cartService.addCart(cart);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
     @PostMapping("/removeProduct")
     ResponseEntity<?> removeProductFromCart(@RequestBody Product product, @RequestParam Integer cartId){
-        Cart cart = cartRepo.getCartById(cartId);
+        Cart cart = cartService.getCartById(cartId);
 
         cart.getProducts().remove(product);
-        cartRepo.save(cart);
+        cartService.addCart(cart);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
@@ -82,9 +106,10 @@ public class CartController {
         Cart cart = new Cart();
 
         cart.setUser(user);
-        cartRepo.save(cart);
+        cartService.addCart(cart);
 
         user.setCart(cart);
+        //userService.addUser(user);
         userRepo.save(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(cart);
@@ -92,6 +117,6 @@ public class CartController {
 
     @GetMapping("/getCartByUser")
     ResponseEntity<?> getCart(@RequestBody  User user){
-        return ResponseEntity.status(HttpStatus.OK).body(cartRepo.getCartByUser(user));
+        return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartByUser(user));
     }
 }
