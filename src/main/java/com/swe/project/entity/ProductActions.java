@@ -13,7 +13,7 @@ public class ProductActions extends Action{
     Product product;
 
     public ProductActions() {
-
+        product = null;
     }
 
     public Product getProduct() {

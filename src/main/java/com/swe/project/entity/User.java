@@ -19,65 +19,26 @@ public class User {
     public String email;
     private String password;
 
-    @OneToMany
+    /*@OneToMany
     public Set<Store> stores;
 
     @ManyToMany
     public Set<Product> viewedProducts;
-
+*/
     @OneToOne
     @JoinColumn(name = "cartId")
     private Cart cart;
 
-    EnumSet<userType> userRoles;
-
-    public EnumSet<userType> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(EnumSet<userType> userRoles) {
-        this.userRoles = userRoles;
-    }
-
-    public User(String ownerUsername) {
-        this.username=ownerUsername;
-        //this.type = userType.storeOwner.getType();
-        this.email = "";
-        this.username = "";
-        this.password = "";
-    }
-
-    /*public static enum userType {
-            admin("admin") , customer("customer") , storeOwner("owner");
-        public String type;
-        userType(String type) {
-            this.type=type;
-        }
-        public String getType(){
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public static userType parse(String type){
-            for(userType type1 :userType.values()){
-                if(type1.type==type){
-                    return type1;
-                }
-            }
-            return null;
-        }
-    }*/
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+    private Set<userType> userRoles;
 
 
-
-    public User(userType type, String email, String username, String password) {
+    public User(userType type, String email, String username, String password, Set<userType> userTypeset) {
        // this.type = type.getType();
         this.email = email;
         this.username = username;
         this.password = password;
+        userRoles = userTypeset;
     }
 
     public User() {
@@ -109,22 +70,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Set<Store> getStores() {
-        return stores;
-    }
-
-    public void setStores(Set<Store> stores) {
-        this.stores = stores;
-    }
-
-    public Set<Product> getViewedProducts() {
-        return viewedProducts;
-    }
-
-    public void setViewedProducts(Set<Product> viewedProducts) {
-        this.viewedProducts = viewedProducts;
     }
 
     public String getPassword() {

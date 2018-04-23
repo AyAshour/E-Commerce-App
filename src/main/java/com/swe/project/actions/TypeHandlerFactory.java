@@ -1,8 +1,11 @@
 package com.swe.project.actions;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class TypeHandlerFactory {
     Map<String, TypeHandler> typeHandlerMap;
 

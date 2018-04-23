@@ -22,7 +22,8 @@ public class Store {
     @JoinColumn(name = "ownerId")
     private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)//manytomany
+    //@JoinColumn(name = "productId")
     private List<Product> products;
 
 
@@ -34,11 +35,11 @@ public class Store {
         this.accepted = false;
     }
     public Store(int id){
-        this.id = id;
+        this.id= id;
         this.name = "";
         this.type = "";
         this.location = "";
-        this.owner = owner;
+        //this.owner = owner;
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
@@ -53,12 +54,20 @@ public class Store {
         this.products = new ArrayList<Product>();
     }
 
-    public Integer getId() {
+    public Integer getStoreId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setStoreId(Integer storeId) {
+        this.id = storeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {

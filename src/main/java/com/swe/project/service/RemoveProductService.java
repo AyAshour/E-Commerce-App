@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Service
 public class RemoveProductService {
     @Autowired
@@ -17,26 +19,25 @@ public class RemoveProductService {
     @Autowired
     ProductRepository productRepo;
 
-    public void remove( Product product, Integer storeId, User originalOwner){
-        Store store = storeRepo.findStoreById(storeId);
-        Product productinSystem = productRepo.findProductById(product.getId());
-        if(originalOwner.equals(store.getOwner())){
-            for(Product p : store.getProducts()){
-                if(p.equals(product)){
+    public void remove( Product product, Store store){
 
-                    store.getProducts().remove(p);
-                    storeRepo.save(store);
+        //Store store = storeRepo.findStoreById(storeId);
+        Product productInSystem = productRepo.findProductById(product.getId());
+        List<Product> storeProducts =   store.getProducts();
+        for(Product p : storeProducts){
+            if(p.equals(product)){
 
-                    productinSystem.setQuantity(productinSystem.getQuantity() - p.getQuantity());
-                    productRepo.save(productinSystem);
+                storeProducts.remove(p);
+                store.setProducts(storeProducts);
 
-                    Action action = new ProductActions(product);
-                    action.setStore(store);
-                    action.setType("delete");
-                    //ActionController actionController = new ProductActionsController();
-                    // actionController.remove(action);
-                }
+                storeRepo.save(store);
+
+                productInSystem.setQuantity(productInSystem.getQuantity() - p.getQuantity());
+                productRepo.save(productInSystem);
+
+                return;
             }
         }
     }
+
 }

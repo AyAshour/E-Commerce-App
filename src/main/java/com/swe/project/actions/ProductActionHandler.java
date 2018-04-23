@@ -16,6 +16,8 @@ public class ProductActionHandler implements ActionHandler {
     private ProductActionsService productActionsService;
 
     TypeHandler typeHandler;
+
+    @Autowired
     TypeHandlerFactory typeHandlerFactory;
 
     @Override
@@ -28,10 +30,11 @@ public class ProductActionHandler implements ActionHandler {
     @Override
     public void undoAction(Action action) {
 
+        typeHandler = typeHandlerFactory.getHandler(action.getType());
+        typeHandler.undoAction(action);
+
         productActionsService.removeAction((ProductActions) action);
 
-        typeHandler = typeHandlerFactory.getHandler(action.getType());
-        typeHandler.doAction((ProductActions) action);
     }
 
     @Autowired ActionHandlerFactory actionHandlerFactory;
