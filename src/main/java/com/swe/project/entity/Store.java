@@ -12,7 +12,7 @@ import java.util.Set;
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer id = 0;
 
     public String name;
     public String type;

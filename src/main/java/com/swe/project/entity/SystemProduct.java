@@ -7,7 +7,7 @@ import javax.persistence.Id;
 public class SystemProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer id = 0;
 
     public String name;
     public double low_range;

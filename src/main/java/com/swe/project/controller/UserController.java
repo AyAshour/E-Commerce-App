@@ -30,7 +30,7 @@ public class UserController {
     private  StoreRepository storeRepository;
 
 
-    @PostMapping(value = "/register")
+    @GetMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername()))
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); // CONFLICT or BAD_REQUEST ?
@@ -78,6 +78,4 @@ public class UserController {
         }
         return ResponseEntity.ok().body(null);
     }
-
-
 }

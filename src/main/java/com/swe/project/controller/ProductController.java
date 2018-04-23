@@ -59,7 +59,7 @@ public class ProductController {
         return productRepository.findAllByInStock(false);
     }
 
-    public Set<String> orderedProducts(int X, int addedValue) {
+    public Set<String> orderedProduct(int X, int addedValue) {
         Iterable<Product> products = getProductsOutOfStock();
         HashMap<String, Integer> mp = new HashMap<String, Integer>();
         PriorityQueue<javafx.util.Pair<Integer, String>> productsOrdered = new PriorityQueue<>();
@@ -81,11 +81,11 @@ public class ProductController {
     }
 
     public Set<String> mostOrderedProducts(int X) {
-        return orderedProducts(X, 1);
+        return orderedProduct(X, 1);
     }
 
     public Set<String> leastOrderedProducts(int X) {
-        return orderedProducts(X, -1);
+        return orderedProduct(X, -1);
     }
 
     @PostMapping("/viewProduct")

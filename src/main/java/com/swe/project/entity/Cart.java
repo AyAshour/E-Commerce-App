@@ -9,7 +9,7 @@ import java.util.Map;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer id = 0;
 
     @OneToOne
     @JoinColumn(name = "userId")

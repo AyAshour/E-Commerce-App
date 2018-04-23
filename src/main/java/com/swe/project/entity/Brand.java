@@ -15,8 +15,11 @@ import javax.persistence.Id;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    public String name,category;
+    private int id = 0;
+    @OneToOne
+    @JoinColumn(name = "categoryId")
+    public Category category;
+    public String name;
 
     @OneToMany
     public List<Product> products;
@@ -25,8 +28,9 @@ public class Brand {
         name="";
     }
 
-    public Brand(String name){
+    public Brand(String name, Category category){
         this.name = name;
+        this.category = category;
     }
 
     public int getId() {

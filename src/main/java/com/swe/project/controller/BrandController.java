@@ -1,8 +1,10 @@
 package com.swe.project.controller;
 
 import com.swe.project.entity.Brand;
+import com.swe.project.entity.Category;
 import com.swe.project.entity.Product;
 import com.swe.project.repository.BrandRepository;
+import com.swe.project.repository.CategoryRepository;
 import com.swe.project.repository.ProductRepository;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping(value = "/brand")
 public class BrandController {
@@ -20,20 +21,24 @@ public class BrandController {
     @Autowired
     private ProductController productController;
     @Autowired
-    private  BrandRepository brandRepository;
+    private BrandRepository brandRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @PostMapping("/addBrand")
-    @ResponseBody
-    ResponseEntity<?> addBrand(@RequestParam String brandName) {
-        if (!brandRepository.existsByName(brandName)) {
-            Brand brand = new Brand(brandName);
+    ResponseEntity<?> addBrand(@RequestParam String name) {
+        String categoryName = "mobiles";
+        //String name = brand.name;
+        if (!brandRepository.existsByName(name) &&
+                categoryRepository.existsByName(categoryName) == true) {
+            Brand brand = new Brand(name, categoryRepository.findByName(categoryName));
             brandRepository.save(brand);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @GetMapping(value = "/getAll")
+    @PostMapping(value = "/getAll")
     public ResponseEntity<?> getAll() {
         Iterable<Brand> brands = brandRepository.findAll();
         if (brands.equals(null))
@@ -50,7 +55,7 @@ public class BrandController {
             Brand brand = product.brand;
             String name = brand.name;
             if (!mp.containsKey(name)) {
-                mp.put(name,1);
+                mp.put(name, 1);
             } else {
                 mp.put(name, mp.get(name) + 1);
             }

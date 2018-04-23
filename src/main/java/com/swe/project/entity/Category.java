@@ -1,32 +1,23 @@
 package com.swe.project.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
+import javax.persistence.*;
 
 @Entity
+@EnableAutoConfiguration
 public class Category {
+    ///@GeneratedValue(strategy = GenerationType.AUTO)
+   /// private Integer id  = 0;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
     public String name;
 
-    public Category(){
+    public Category() {
         name = "";
     }
 
-    public Category(String name){
+    public Category(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -8,13 +8,12 @@ import com.swe.project.repository.StoreRepository;
 import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/ViewStatistics")
 public class ViewStatisticsController {
@@ -28,7 +27,8 @@ public class ViewStatisticsController {
     private BrandController brandController;
 
     @PostMapping(value = "/store")
-    public ResponseEntity<?> StoreStatistics(Integer storeID, int X) {
+    public ResponseEntity<?> StoreStatistics(Integer storeID) {
+        int X = 2;
         Store store = storeRepository.findStoreById(storeID);
         Set<User> viewers = new HashSet<>();
         Set<User> buyers = new HashSet<>();
@@ -44,6 +44,7 @@ public class ViewStatisticsController {
         Integer numberOfUsersBuyTheStoreProducts = buyers.size();
         Set<String> mostOrderedProducts = productController.mostOrderedProducts(X);
         Set<String> mostOrderedBrands = brandController.mostOrderedBrands(X);
+
         return ResponseEntity.ok().body(null);
     }
 
