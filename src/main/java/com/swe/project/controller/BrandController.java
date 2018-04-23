@@ -26,12 +26,9 @@ public class BrandController {
     private CategoryRepository categoryRepository;
 
     @PostMapping("/addBrand")
-    ResponseEntity<?> addBrand(@RequestParam String name) {
-        String categoryName = "mobiles";
-        //String name = brand.name;
-        if (!brandRepository.existsByName(name) &&
-                categoryRepository.existsByName(categoryName) == true) {
-            Brand brand = new Brand(name, categoryRepository.findByName(categoryName));
+    ResponseEntity<?> addBrand(@RequestBody Brand brand) {
+        if (!brandRepository.existsByName(brand.name) &&
+                categoryRepository.existsByName(brand.category.name) == true) {
             brandRepository.save(brand);
             return ResponseEntity.ok().build();
         }
