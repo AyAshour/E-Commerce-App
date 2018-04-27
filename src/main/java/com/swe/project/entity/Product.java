@@ -20,40 +20,36 @@ import javax.persistence.Id;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer productId;
 
     public String name;
     public double price;
-    public double low_range;
-    public double high_range;
     public boolean inStock;
-    private Integer quantity;
-
+    public Integer quantity;
     @ManyToOne
     @JoinColumn(name = "brandId")
     public Brand brand;
 
-    @ManyToMany
-    public List<User> viewers;
+   /* @ManyToMany
+    public List<User> viewers = null;*/
 
     @OneToOne
     @JoinColumn(name = "categoryId")
     private Category category;
 
+
     public Product() {
         this.name = "";
-        this.low_range = this.high_range = 0;
         this.price = 0.0;
-        this.quantity = 0;
         this.brand = null;
         this.category = null;
     }
 
-    public Product(String name, double low ,double high, double price, Category category, Integer quantity, Brand brand) {
+
+
+    public Product(String name, double price, Category category, Integer quantity, Brand brand) {
 
         this.name = name;
-        this.low_range = low;
-        this.high_range = high;
         this.price = price;
         this.quantity = quantity;
         this.brand = brand;
@@ -62,7 +58,7 @@ public class Product {
     }
 
     public Integer getId() {
-        return id;
+        return this.productId;
     }
 
     public Category getCategory() {
@@ -73,7 +69,13 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public double getPrice() {
         return price;
@@ -84,7 +86,7 @@ public class Product {
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.productId = id;
     }
 
     public Brand getBrand() {

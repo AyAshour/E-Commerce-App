@@ -16,6 +16,7 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer brandId;
+
     public String name,category;
 
     @OneToMany

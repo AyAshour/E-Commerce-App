@@ -16,25 +16,31 @@ import java.util.HashMap;
 @RestController
 @RequestMapping(value = "/brand")
 public class BrandController {
-    @Autowired
-    private BrandRepository brandRepo;
-
-    @Autowired
-    private ProductController productController;
 
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private ProductController productController;
+
 
 
     @PostMapping("/addBrand")
     @ResponseBody
     ResponseEntity<?> addBrand(@RequestParam  String brandName) {
-        return brandService.addBrand(brandName);
+        boolean existBrand =brandService.addBrand(brandName);
+        if(!existBrand) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @GetMapping(value = "/getAll")
-    public ResponseEntity<?> getAllBrands() {
-        return brandService.getAllBrands();
+    public ResponseEntity<?> getAll() {
+        Iterable<Brand> brands = brandService.getAllBrands();
+        if(brands.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(brands);
     }
 
 
@@ -46,9 +52,11 @@ public class BrandController {
         Integer mxOrderedBrand = 0;
         Brand ret = new Brand();
         for(Product p:products) {
+
             Integer id = p.getBrandId();
             Brand brand = brandRepo.findById(id);
             String name = brand.getName();
+
             if(!mp.containsKey(name)) {
                 mp.put(name, 1);
             }

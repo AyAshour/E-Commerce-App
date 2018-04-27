@@ -5,24 +5,26 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @EnableAutoConfiguration
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer storeId;
 
     public String name;
     public String type;
     public String location;
     public boolean accepted;
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "ownerId")
     private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productId", cascade = CascadeType.ALL)//manytomany
+    //@JoinColumn(name = "productId")
     private List<Product> products;
 
 
@@ -35,7 +37,6 @@ public class Store {
         this.products = new ArrayList<Product>();
     }
     public Store(){
-        this.id = id;
         this.name = "";
         this.type = "";
         this.location = "";
@@ -43,22 +44,21 @@ public class Store {
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
-    /*public Store() {
-        this.name = "";
-        this.type = "";
-        this.location = "";
 
-        this.owner = null;
-        this.accepted = false;
-        this.products = new ArrayList<Product>();
-    }*/
-
-    public Integer getId() {
-        return id;
+    public Integer getStoreId() {
+        return storeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {

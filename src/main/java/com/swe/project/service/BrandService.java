@@ -7,26 +7,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class BrandService {
 
     @Autowired
-    private BrandRepository brandRepo;
 
-    public ResponseEntity<?> addBrand(String brandName){
-        if(!brandRepo.existsByName(brandName)) {
+    private BrandRepository brandRepository;
+    public boolean addBrand(String brandName){
+        if(!brandRepository.existsByName(brandName)) {
             Brand brand = new Brand(brandName);
-            brandRepo.save(brand);
-            return ResponseEntity.ok().build();
+            brandRepository.save(brand);
+            return true;
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return false;
     }
-
-    public ResponseEntity<?> getAllBrands(){
-        Iterable<Brand> brands = brandRepo.findAll();
-        if(brands.equals(null))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(brands);
+    public Iterable<Brand> getAllBrands(){
+        Iterable<Brand> brands = brandRepository.findAll();
+        return brands;
     }
 }

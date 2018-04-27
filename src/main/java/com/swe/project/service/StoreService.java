@@ -4,27 +4,95 @@ package com.swe.project.service;
 
 import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
-import com.swe.project.entity.User;
-import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
-import com.swe.project.repository.UserRepository;
-import com.swe.project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 @Service
 public class StoreService {
-     private UserRepository userRepository;
-     private StoreRepository storeRepository;
-     private ProductRepository productRepository;
 
-     public void addStore(Store store, String ownerUsername){
-         store.setOwner(userRepository.findByUsername(ownerUsername));
+     @Autowired
+     private StoreRepository storeRepository;
+
+     @Autowired
+     private ProductService productService;
+
+     public Store getStoreById(Integer storeId){
+         return storeRepository.findByStoreId(storeId);
+     }
+
+     public void addStore(Store store){
          storeRepository.save(store);
      }
+
+     //public boolean addStore
+
+
+    public Store addProduct(Product product, Integer storeId){
+        Store store = storeRepository.findByStoreId(storeId);
+        System.out.println("product id "+product.getId());
+        Product existProduct = productService.getProductById(product.getId());
+        System.out.println("product is empty "+existProduct);
+        if(existProduct == null)
+            return null;
+
+        List<Product> products =  store.getProducts();
+        products.add(product);
+        store.setProducts(products);
+        storeRepository.save(store);
+
+        Integer addedQuantity = product.getQuantity();
+
+        Integer existQuantity = existProduct.getQuantity();
+        existProduct.setQuantity(existQuantity + addedQuantity);
+        productService.addProduct(product);
+        System.out.println("store is "+store.getName());
+        return store;
+    }
+    public Store remove( Product product, Store store){
+
+        Product productInSystem = productService.getProductById(product.getId());
+        List<Product> storeProducts =   store.getProducts();
+        for(Product p : storeProducts){
+            if(p.equals(product)){
+
+                storeProducts.remove(p);
+                store.setProducts(storeProducts);
+
+                storeRepository.save(store);
+
+                productInSystem.setQuantity(productInSystem.getQuantity() - p.getQuantity());
+                productService.addProduct(productInSystem);
+
+                return store;
+            }
+        }
+        return null;
+    }
+
+    public List<Product> getStoreProducts(Integer storeId){
+         Store store = storeRepository.findByStoreId(storeId);
+         return store.getProducts();
+    }
+
+    public void deleteStore(Store store){
+         storeRepository.delete(store);
+    }
+    public void deleteStoreById(Integer storeId){
+        storeRepository.deleteById(storeId);
+    }
+    public Iterable<Store> findByAccepted(boolean accepted){
+         return storeRepository.findStoresByAccepted(accepted);
+    }
+
+
+/*     public void addStore(Store store, String ownerUsername){
+         store.setOwner(userRepository.findByUsername(ownerUsername));
+         storeRepository.save(store);
+     }*/
 
 //    @Autowired
 //    StoreProductsRepository storeProductsDP;

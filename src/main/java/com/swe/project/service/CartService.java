@@ -17,10 +17,11 @@ public class CartService {
     }
 
     public Cart getCartById(Integer cartId){
-        return cartRepo.getCartById(cartId);
+        return cartRepo.getCartByCartId(cartId);
     }
 
     public Cart getCartByUser(User user){
         return cartRepo.getCartByUser(user);
     }
+
 }

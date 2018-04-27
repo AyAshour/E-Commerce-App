@@ -13,5 +13,5 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
 
     Iterable<Product> findAllByInStock(boolean inStock);
    // Iterable<Product> findAllByStore(Store store);
-    Product findProductById (Integer id);
+    Product findProductByProductId (Integer productId);
 }
