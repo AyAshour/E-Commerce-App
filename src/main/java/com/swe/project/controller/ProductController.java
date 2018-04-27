@@ -26,6 +26,7 @@ public class ProductController {
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
         productService.addProduct(product);
         return ResponseEntity.ok().build();
+
     }
 
 
@@ -72,7 +73,7 @@ public class ProductController {
         Integer mxOrderedProduct = 0;
         Product ret = new Product();
         for (Product p : products) {
-            String name = p.getName();
+            String name = p.name;
             if (!mp.containsKey(name)) {
                 mp.put(name, 1);
             } else {

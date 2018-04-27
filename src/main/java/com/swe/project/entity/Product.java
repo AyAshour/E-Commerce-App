@@ -24,11 +24,8 @@ public class Product {
 
     public String name;
     public double price;
-    public double low_range;
-    public double high_range;
     public boolean inStock;
-    private Integer quantity;
-
+    public Integer quantity;
     @ManyToOne
     @JoinColumn(name = "brandId")
     public Brand brand;
@@ -40,20 +37,19 @@ public class Product {
     @JoinColumn(name = "categoryId")
     private Category category;
 
+
     public Product() {
         this.name = "";
-        this.low_range = this.high_range = 0;
         this.price = 0.0;
-        this.quantity = 0;
         this.brand = null;
         this.category = null;
     }
 
-    public Product(String name, double low ,double high, double price, Category category, Integer quantity, Brand brand) {
+
+
+    public Product(String name, double price, Category category, Integer quantity, Brand brand) {
 
         this.name = name;
-        this.low_range = low;
-        this.high_range = high;
         this.price = price;
         this.quantity = quantity;
         this.brand = brand;

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.util.Set;
+
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/store")
@@ -77,6 +80,7 @@ public class StoreController {
         store.setOwner(user); // can i send it inside Store from the front end.
        //storeService.addStore(store);
         storeRepository.save(store);
+
         return ResponseEntity.ok().build();
     }
 
