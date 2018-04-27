@@ -20,7 +20,7 @@ import javax.persistence.Id;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer productId;
 
     public String name;
     public double price;
@@ -30,13 +30,8 @@ public class Product {
     @JoinColumn(name = "brandId")
     public Brand brand;
 
-
-
-    @OneToMany
-    public User buyer;
-
-    @ManyToMany
-    public List<User> viewers;
+   /* @ManyToMany
+    public List<User> viewers = null;*/
 
     @OneToOne
     @JoinColumn(name = "categoryId")
@@ -63,7 +58,7 @@ public class Product {
     }
 
     public Integer getId() {
-        return id;
+        return this.productId;
     }
 
     public Category getCategory() {
@@ -74,7 +69,13 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public double getPrice() {
         return price;
@@ -85,7 +86,7 @@ public class Product {
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.productId = id;
     }
 
     public Brand getBrand() {

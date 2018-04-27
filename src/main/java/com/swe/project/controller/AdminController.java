@@ -1,12 +1,10 @@
 package com.swe.project.controller;
 
-import com.swe.project.entity.Brand;
-import com.swe.project.entity.Product;
-import com.swe.project.entity.User;
 import com.swe.project.repository.BrandRepository;
 import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin")
@@ -21,7 +19,7 @@ public class AdminController {
     @Autowired
     UserRepository userRepo;
 
-  /*  boolean isAdmin(Integer id){
+   /* boolean isAdmin(Integer id){
         User user = userRepo.findUserById(id);
         if(user.isAdmin())
             return true;
@@ -31,7 +29,7 @@ public class AdminController {
     public boolean addProduct(@PathVariable Integer id, @RequestParam String name, @RequestParam String category, @RequestParam String priceRange, @RequestParam double price) {
         if (isAdmin(id)) {
             Product p = new Product(name, priceRange, price, category);
-            pc.addProduct(p);
+            p.addProduct(p);
             return true;
         }
         return false;

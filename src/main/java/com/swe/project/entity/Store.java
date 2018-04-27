@@ -12,7 +12,7 @@ import java.util.Set;
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer storeId;
 
     public String name;
     public String type;
@@ -23,7 +23,8 @@ public class Store {
     @JoinColumn(name = "ownerId")
     private Set<User> owners;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productId", cascade = CascadeType.ALL)//manytomany
+    //@JoinColumn(name = "productId")
     private List<Product> products;
 
 
@@ -33,16 +34,18 @@ public class Store {
         this.location = location;
         this.accepted = false;
     }
-    public Store(int id){
-        this.id = id;
+    public Store(Integer storeId){
+        this.storeId= storeId;
         this.name = "";
         this.type = "";
         this.location = "";
+
+        //this.owner = owner;
+
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
     public Store() {
-        id = 0;
         this.name = "";
         this.type = "";
         this.location = "";
@@ -51,12 +54,20 @@ public class Store {
         this.products = new ArrayList<Product>();
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getStoreId() {
+        return storeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {

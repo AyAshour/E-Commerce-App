@@ -1,19 +1,23 @@
 package com.swe.project.controller;
 
-import com.swe.project.entity.Product;
-import com.swe.project.entity.Store;
-import com.swe.project.entity.User;
-import com.swe.project.repository.ProductRepository;
+import com.swe.project.actions.ActionHandler;
+import com.swe.project.actions.ActionHandlerFactory;
+import com.swe.project.entity.*;
 import com.swe.project.repository.StoreRepository;
-import com.swe.project.repository.UserRepository;
+import com.swe.project.service.ActionsService;
+import com.swe.project.service.ProductService;
 import com.swe.project.service.StoreService;
+import com.swe.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import java.util.Set;
+
 
 @CrossOrigin
 @RestController
@@ -21,17 +25,144 @@ import java.util.Set;
 public class StoreController {
 
     @Autowired
-    private StoreRepository storeRepo;
-
-    @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private ProductRepository productRepo;
-
-    @Autowired
     private StoreService storeService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ActionHandlerFactory actionHandlerFactory;
+
+    private ActionHandler actionHandler;
+
+    @Autowired
+    private ActionsService actionsService;
+
+    @Autowired
+    private ProductService productService;
+
+    @GetMapping(value = "/showActions")
+    public ResponseEntity<?>  showActions(@RequestParam("ownerUserName") String ownerUserName, @RequestParam("storeId") Integer storeId){
+        /*Store store = storeRepo.findStoreById(storeId);
+        User owner = store.getOwner();
+
+        if(! ownerUserName.equals(owner.getUsername())){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }*/
+        List<Action> actions = actionsService.showActions(storeId);
+        return ResponseEntity.ok().body(actions);/*
+        showActionsService.showActions(storeId);
+        return  ResponseEntity.ok().build();*/
+    }
+
+    @PostMapping(value = "/undoAction")
+    public ResponseEntity<?>  undoAction(@RequestParam("actionId") Integer actionId, @RequestParam("ownerUserName") String ownerUserName){
+        Action action = actionsService.getActionById(actionId);
+        Store store = storeService.getStoreById(action.getStore().getStoreId());
+        User owner = store.getOwner();
+
+        if(! ownerUserName.equals(owner.getUsername())){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        actionHandler = actionHandlerFactory.getHandler(action.getAffectedObject());
+        actionHandler.undoAction(action);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    @Autowired
+    StoreRepository storeRepository;
+    @PostMapping(path = "/addStore")
+    public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
+
+        User user = userService.findByUsername(ownerUsername);
+        store.setOwner(user); // can i send it inside Store from the front end.
+       //storeService.addStore(store);
+        storeRepository.save(store);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/acceptStore")
+    public ResponseEntity<?> acceptStore(@RequestParam Integer id){
+        Store targetStore = storeService.getStoreById(id);
+        storeService.deleteStore(targetStore); // to avoid duplicated data
+        targetStore.accepted=true;
+        targetStore.setAccepted(true);
+        storeService.addStore(targetStore);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/unAcceptStore")
+    @Transactional
+    public ResponseEntity<?> unAcceptStore(@RequestParam Integer id){
+        storeService.deleteStoreById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(path = "/getAcceptedStores")
+    public ResponseEntity<?> getAcceptedStores(){
+        Iterable<Store> stores = storeService.findByAccepted(true);
+        if(stores.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(stores);
+    }
+
+    @GetMapping(path = "/getUnAcceptedStores")
+    public ResponseEntity<?> getUnAcceptedStores(){
+        Iterable<Store> stores = storeService.findByAccepted(false);
+        if(stores.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(stores);
+    }
+
+
+    @PostMapping("/addProductToStore")
+    ResponseEntity<?> addProductToStore(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
+
+         Store store = storeService.addProduct(product, storeId);
+       if(store == null)
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there is no product with this id , please contact admin!");
+       else {
+           Action action = new ProductActions(product);
+           action.setStore(store);
+           action.setType("insertProduct");
+
+           actionHandler = actionHandlerFactory.getHandler("product");
+           actionHandler.doAction(action);
+       }
+       return ResponseEntity.status(HttpStatus.OK).body(store);
+
+    }
+
+
+    @RequestMapping("/removeProductFromStore")
+    ResponseEntity<?> removeProduct(@RequestBody Product product, @RequestBody Store store){
+
+        storeService.remove(product, store);
+        if(store == null)
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there is no product with this id , please contact admin!");
+        else {
+            Action action = new ProductActions(product);
+            action.setStore(store);
+            action.setType("deleteProduct");
+
+            actionHandler = actionHandlerFactory.getHandler("product");
+            actionHandler.doAction(action);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(store);
+    }
+
+
+    @PostMapping("/addDiscountToProduct")
+    public ResponseEntity<?> addDiscount(@RequestBody Product product, @RequestParam double discount) {
+        productService.ApplyDiscount(product, discount);
+        return ResponseEntity.ok().build();
+    }
+}
 
 //    @GetMapping(path = "/adminView")
 //    public ArrayList<Object> adminView(@RequestParam Integer storeID){
@@ -42,69 +173,3 @@ public class StoreController {
 //        ret.add(new Pair<String,ArrayList<Product>>("Sold out products",storeService.soldOutProducts(storeID)));
 //        return ret;
 //    }
-
-    @PostMapping(path = "/addStore")
-    public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
-
-        store.setOwner((Set<User>) userRepo.findByUsername(ownerUsername)); // can i send it inside Store from the front end.
-        storeRepo.save(store);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/acceptStore")
-    public ResponseEntity<?> acceptStore(@RequestParam Integer id){
-        Store targetStore = storeRepo.findStoreById(id);
-        storeRepo.delete(targetStore); // to avoid duplicated data
-        targetStore.accepted=true;
-        targetStore.setAccepted(true);
-        storeRepo.save(targetStore);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/unAcceptStore")
-    @Transactional
-    public ResponseEntity<?> unAcceptStore(@RequestParam Integer id){
-        storeRepo.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(path = "/getAcceptedStores")
-    public ResponseEntity<?> getAcceptedStores(){
-        Iterable<Store> stores = storeRepo.findStoresByAccepted(true);
-        if(stores.equals(null))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(stores);
-    }
-
-    @GetMapping(path = "/getUnAcceptedStores")
-    public ResponseEntity<?> getUnAcceptedStores(){
-        Iterable<Store> stores = storeRepo.findStoresByAccepted(false);
-        if(stores.equals(null))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(stores);
-    }
-
-    @PostMapping(path = "/addStoreObject")
-    public String addStore(@ModelAttribute("store") Store store){
-        storeRepo.save(store);
-        return "done!";
-    }
-    @PostMapping("/addProductToStore")
-    ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
-        Store store = storeRepo.findStoreById(storeId);
-
-        store.getProducts().add(product);
-        storeRepo.save(store);
-
-        Integer addedQuantity = product.getQuantity();
-        Product existProduct = productRepo.findProductById(product.getId());
-        Integer existQuantity = existProduct.getQuantity();
-        existProduct.setQuantity(existQuantity + addedQuantity);
-        productRepo.save(existProduct);
-
-        return ResponseEntity.status(HttpStatus.OK).body(store);
-    }
-
-}

@@ -9,7 +9,7 @@ import java.util.Map;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer cartId;
 
     @OneToOne
     @JoinColumn(name = "userId")
@@ -17,8 +17,6 @@ public class Cart {
 
     @OneToMany(targetEntity = Product.class)
     Map<Integer,Product> products;
-
-
 
     public Cart() {
         this.user = null;
@@ -31,11 +29,11 @@ public class Cart {
     }
 
     public Integer getId() {
-        return id;
+        return cartId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.cartId = id;
     }
 
     public User getUser() {

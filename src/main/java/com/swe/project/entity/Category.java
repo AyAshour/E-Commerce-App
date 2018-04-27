@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer categoryId;
 
     public String name;
 
@@ -22,11 +22,11 @@ public class Category {
     }
 
     public int getId() {
-        return id;
+        return categoryId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.categoryId = id;
     }
 
     public String getName() {

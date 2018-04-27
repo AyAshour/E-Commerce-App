@@ -2,6 +2,8 @@ package com.swe.project.controller;
 
 import com.swe.project.entity.Product;
 import com.swe.project.repository.ProductRepository;
+import com.swe.project.service.ProductService;
+import com.swe.project.service.ShippingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +18,13 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
-    private ProductRepository productRepo;
+    private ProductService productService;
 
+    ShippingService shippingService;
 
     @PostMapping("/addProductToSystem")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
-        productRepo.save(product);
+        productService.addProduct(product);
         return ResponseEntity.ok().build();
 
     }
@@ -38,15 +41,15 @@ public class ProductController {
 
     @GetMapping(value = "/get")
     public ResponseEntity<?> getProduct(@RequestParam Integer id) {
-        Optional<Product> productOptional = productRepo.findById(id);
-        if(productOptional.isPresent())
-            return ResponseEntity.status(HttpStatus.OK).body(productOptional.get());
+        Product product = productService.getProductById(id);
+        if(product != null)
+            return ResponseEntity.status(HttpStatus.OK).body(product);
         else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll() {
-        Iterable<Product> productsOptional = productRepo.findAll();
+        Iterable<Product> productsOptional = productService.getAll();
         if(productsOptional.equals(null))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         else
@@ -55,12 +58,12 @@ public class ProductController {
 
     @PostMapping(value = "/remove")
     public ResponseEntity<?> removeProduct(@RequestParam Integer id) {
-        productRepo.deleteById(id);
+        productService.removeProduct(id);
         return ResponseEntity.ok().build();
     }
 
     public Iterable<Product> getProductsOutOfStock() {
-        return productRepo.findAllByInStock(false);
+        return productService.getProductsOutOfStock();
     }
 
     @PostMapping("/viewMostOrdered")
@@ -83,8 +86,15 @@ public class ProductController {
         }
         return ret;
     }
-//    @PostMapping("/buyProduct")
-//    public String buyProduct() {
-//        Iterable<Product> products = getProducts();
-//    }
+
+    @PostMapping("/buyProduct")
+    ResponseEntity<?> buyProduct(@RequestBody Product product, @RequestParam Integer quantity, @RequestParam String address)
+    {
+        productService.buyProduct(product, quantity);
+        if(shippingService.canBeShipped(address)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }
