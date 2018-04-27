@@ -11,7 +11,7 @@ import java.util.List;
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer storeId;
 
     public String name;
     public String type;
@@ -22,7 +22,7 @@ public class Store {
     @JoinColumn(name = "ownerId")
     private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)//manytomany
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productId", cascade = CascadeType.ALL)//manytomany
     //@JoinColumn(name = "productId")
     private List<Product> products;
 
@@ -34,8 +34,8 @@ public class Store {
         this.owner = owner;
         this.accepted = false;
     }
-    public Store(int id){
-        this.id= id;
+    public Store(Integer storeId){
+        this.storeId= storeId;
         this.name = "";
         this.type = "";
         this.location = "";
@@ -44,7 +44,6 @@ public class Store {
         this.products = new ArrayList<Product>();
     }
     public Store() {
-        id = 0;
         this.name = "";
         this.type = "";
         this.location = "";
@@ -55,11 +54,11 @@ public class Store {
     }
 
     public Integer getStoreId() {
-        return id;
+        return storeId;
     }
 
     public void setStoreId(Integer storeId) {
-        this.id = storeId;
+        this.storeId = storeId;
     }
 
     public String getName() {

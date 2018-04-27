@@ -25,7 +25,7 @@ public class StoreService {
      private ProductService productService;
 
      public Store getStoreById(Integer storeId){
-         return storeRepository.findStoreById(storeId);
+         return storeRepository.findByStoreId(storeId);
      }
 
      public void addStore(Store store){
@@ -36,9 +36,10 @@ public class StoreService {
 
 
     public Store addProduct(Product product, Integer storeId){
-        Store store = storeRepository.findStoreById(storeId);
-
+        Store store = storeRepository.findByStoreId(storeId);
+        System.out.println("product id "+product.getId());
         Product existProduct = productService.getProductById(product.getId());
+        System.out.println("product is empty "+existProduct);
         if(existProduct == null)
             return null;
 
@@ -52,7 +53,7 @@ public class StoreService {
         Integer existQuantity = existProduct.getQuantity();
         existProduct.setQuantity(existQuantity + addedQuantity);
         productService.addProduct(product);
-
+        System.out.println("store is "+store.getName());
         return store;
     }
     public Store remove( Product product, Store store){

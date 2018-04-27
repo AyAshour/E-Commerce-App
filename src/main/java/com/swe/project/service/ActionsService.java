@@ -2,10 +2,13 @@ package com.swe.project.service;
 
 import com.swe.project.entity.Action;
 import com.swe.project.entity.ProductActions;
+import com.swe.project.entity.Store;
 import com.swe.project.repository.ActionRepository;
 import com.swe.project.repository.ProductActionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ActionsService {
@@ -13,14 +16,20 @@ public class ActionsService {
     @Autowired
     ActionRepository actionRepository;
 
+     @Autowired
+     StoreService storeService;
+
     public void addAction(ProductActions productActions){
         actionRepository.save((Action)productActions);
     }
+
     public void removeAction(ProductActions action){
         actionRepository.delete(action);
     }
-    public Iterable<Action> showActions(Integer storeId){
-        Iterable<Action> actions = actionRepository.findAllById(storeId);
+
+    public List<Action> showActions(Integer storeId){
+        Store store = storeService.getStoreById(storeId);
+        List<Action> actions = actionRepository.findAllByStore(store);
         return actions;
     }
 
@@ -29,6 +38,6 @@ public class ActionsService {
     }
 
     public Action getActionById(Integer actionId) {
-        return actionRepository.findActionById(actionId);
+        return actionRepository.findActionByActionId(actionId);
     }
 }

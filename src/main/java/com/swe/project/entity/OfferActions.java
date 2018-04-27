@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 public class OfferActions extends Action{
     private static final String AFFECTED_OBJECT = "offer";
 
+
+
     double offer;
 
     public double getOffer() {

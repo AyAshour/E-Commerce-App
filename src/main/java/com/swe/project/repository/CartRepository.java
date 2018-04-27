@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CartRepository extends CrudRepository<Cart, Integer>{
     Cart getCartByUser(User user);
-    Cart getCartById(Integer id);
+    Cart getCartByCartId(Integer cartId);
 }

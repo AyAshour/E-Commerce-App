@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StoreRepository extends CrudRepository<Store, Integer> {
     Iterable<Store> findStoresByAccepted(boolean accepted);
-    Store findStoreById(Integer id);
+    Store findByStoreId(Integer storeId);
 
 }

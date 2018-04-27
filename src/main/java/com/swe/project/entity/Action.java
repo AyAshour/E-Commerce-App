@@ -10,9 +10,8 @@ import java.util.List;
 public abstract class  Action {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer actionId;
 
-    private Integer actionId=1;
 
     protected String affectedObject;
 
@@ -21,7 +20,7 @@ public abstract class  Action {
     private  Store store;
 
     @ManyToOne
-    @JoinColumn(name = "User")
+    @JoinColumn(name = "username")
     private User OriginalStoreOwner;
 
     private String type;
@@ -44,11 +43,11 @@ public abstract class  Action {
 
 
     public Integer getId() {
-        return id;
+        return actionId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.actionId = id;
     }
 
     public Store getStore() {

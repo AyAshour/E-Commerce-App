@@ -23,7 +23,7 @@ public class ProductService {
     }
 
     public Product getProductById(Integer productId){
-        return productRepo.findProductById(productId);
+        return productRepo.findProductByProductId(productId);
     }
 
     public Iterable<Product> getAll(){

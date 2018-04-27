@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OfferActionsRepository extends CrudRepository<OfferActions, Integer> {
-  //  Iterable<OfferActions> findAllByStoreId (Integer storeId);
+  //  Iterable<OfferActions> findAllByStore (Store store);
 }

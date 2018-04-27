@@ -6,13 +6,13 @@ import javax.persistence.*;
 public class UserType {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
-   Integer id;
+   Integer userTypeId;
 
    @ManyToOne
    @JoinColumn(name = "username")
     User user;
 
-/*    public static enum typeUser {
+    public static enum typeUser {
         admin("admin") , customer("customer") , storeOwner("owner");
         public String type;
         typeUser(String type) {
@@ -34,8 +34,7 @@ public class UserType {
             }
             return null;
         }
-    }*/
-
+    }
   public String  getType(){
         return typeUser.customer.getType();
   }

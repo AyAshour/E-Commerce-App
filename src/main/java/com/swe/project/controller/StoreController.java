@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/store")
@@ -31,7 +33,7 @@ public class StoreController {
     private ActionHandler actionHandler;
 
     @Autowired
-    private ActionsService actionsServices;
+    private ActionsService actionsService;
 
     @Autowired
     private ProductService productService;
@@ -44,14 +46,15 @@ public class StoreController {
         if(! ownerUserName.equals(owner.getUsername())){
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }*/
-        return ResponseEntity.ok().body(actionsServices.showActions(storeId));/*
+        List<Action> actions = actionsService.showActions(storeId);
+        return ResponseEntity.ok().body(actions);/*
         showActionsService.showActions(storeId);
         return  ResponseEntity.ok().build();*/
     }
 
     @PostMapping(value = "/undoAction")
     public ResponseEntity<?>  undoAction(@RequestParam("actionId") Integer actionId, @RequestParam("ownerUserName") String ownerUserName){
-        Action action = actionsServices.getActionById(actionId);
+        Action action = actionsService.getActionById(actionId);
         Store store = storeService.getStoreById(action.getStore().getStoreId());
         User owner = store.getOwner();
 
@@ -116,8 +119,7 @@ public class StoreController {
     @PostMapping("/addProductToStore")
     ResponseEntity<?> addProductToStore(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
 
-       Store store = storeService.addProduct(product, storeId);
-
+         Store store = storeService.addProduct(product, storeId);
        if(store == null)
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("there is no product with this id , please contact admin!");
        else {

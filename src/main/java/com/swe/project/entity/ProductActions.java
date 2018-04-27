@@ -9,7 +9,7 @@ public class ProductActions extends Action{
     private static final String AFFECTED_OBJECT = "product";
 
     @ManyToOne
-    @JoinColumn(name = "Product")
+    @JoinColumn(name = "productId")
     Product product;
 
     public ProductActions() {
