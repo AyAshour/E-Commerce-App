@@ -26,11 +26,11 @@ public class User {
     @JoinColumn(name = "cartId")
     private Cart cart;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
             name="user_types",
             joinColumns=@JoinColumn(name="username", referencedColumnName="username"),
-            inverseJoinColumns=@JoinColumn(name="userType", referencedColumnName="userType"))
+            inverseJoinColumns=@JoinColumn(name="userTypeId", referencedColumnName="userTypeId"))
     private Set<UserType> userTypes;
 
     public User(String email, String username, String password, Set<UserType> userTypes) {

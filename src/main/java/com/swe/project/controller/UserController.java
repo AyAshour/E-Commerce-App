@@ -5,6 +5,7 @@ import com.swe.project.entity.Store;
 import com.swe.project.entity.UserType;
 import com.swe.project.repository.UserRepository;
 import com.swe.project.service.UserService;
+import com.swe.project.service.UserTypeService;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,24 +25,23 @@ import java.util.Set;
 public class UserController {
 
     @Autowired
-
     private UserService userService;
+
+    @Autowired
+    private UserTypeService userTypeService;
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody User user, @RequestParam("type") List<String> userTypesList){
 
         Set<UserType> userTypeSet = new HashSet<>();
 
-
-        System.out.print(userTypesList);
-
         for(String role : userTypesList){
             UserType UT = new UserType();
             UT.setUserType(UserType.Type.valueOf(role));
-
+            userTypeService.addUserType(UT);
             userTypeSet.add(UT);
         }
-        System.out.println(userTypeSet.size());
+
         boolean existUser = userService.register(user, userTypeSet);
         if(!existUser)
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); // CONFLICT or BAD_REQUEST ?
