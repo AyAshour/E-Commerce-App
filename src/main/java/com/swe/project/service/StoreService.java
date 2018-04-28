@@ -4,17 +4,15 @@ package com.swe.project.service;
 
 import com.swe.project.entity.Product;
 import com.swe.project.entity.Store;
-import com.swe.project.repository.ProductRepository;
 import com.swe.project.repository.StoreRepository;
-import com.swe.project.repository.UserRepository;
-import com.swe.project.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+@CrossOrigin
 @Service
 public class StoreService {
 
@@ -44,7 +42,7 @@ public class StoreService {
             return null;
 
         List<Product> products =  store.getProducts();
-        products.add(product);
+        products.add(existProduct);
         store.setProducts(products);
         storeRepository.save(store);
 
@@ -52,7 +50,7 @@ public class StoreService {
 
         Integer existQuantity = existProduct.getQuantity();
         existProduct.setQuantity(existQuantity + addedQuantity);
-        productService.addProduct(product);
+        productService.addProduct(existProduct);
         System.out.println("store is "+store.getName());
         return store;
     }
@@ -77,6 +75,11 @@ public class StoreService {
         return null;
     }
 
+    public List<Product> getStoreProducts(Integer storeId){
+         Store store = storeRepository.findByStoreId(storeId);
+         return store.getProducts();
+    }
+
     public void deleteStore(Store store){
          storeRepository.delete(store);
     }
@@ -87,6 +90,11 @@ public class StoreService {
          return storeRepository.findStoresByAccepted(accepted);
     }
 
+
+/*     public void addStore(Store store, String ownerUsername){
+         store.setOwner(userRepository.findByUsername(ownerUsername));
+         storeRepository.save(store);
+     }*/
 
 //    @Autowired
 //    StoreProductsRepository storeProductsDP;

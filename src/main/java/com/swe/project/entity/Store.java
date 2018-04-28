@@ -19,37 +19,38 @@ public class Store {
     public String location;
     public boolean accepted;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "ownerId")
-    private Set<User> owners;
+    private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productId", cascade = CascadeType.ALL)//manytomany
-    //@JoinColumn(name = "productId")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="store_products",
+            joinColumns=@JoinColumn(name="storeId", referencedColumnName="storeId"),
+            inverseJoinColumns=@JoinColumn(name="productId", referencedColumnName="productId"))
     private List<Product> products;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="store_collaborators",
+            joinColumns=@JoinColumn(name="storeId", referencedColumnName="storeId"),
+            inverseJoinColumns=@JoinColumn(name="username", referencedColumnName="username"))
+    private Set<User> collaborators;
 
 
     public Store(String name, String type, String location, User owner) {
         this.name = name;
         this.type = type;
         this.location = location;
-        this.accepted = false;
-    }
-    public Store(Integer storeId){
-        this.storeId= storeId;
-        this.name = "";
-        this.type = "";
-        this.location = "";
-
-        //this.owner = owner;
-
+        this.owner = owner;
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
-    public Store() {
+    public Store(){
         this.name = "";
         this.type = "";
         this.location = "";
-
+        this.owner = null;
         this.accepted = false;
         this.products = new ArrayList<Product>();
     }
@@ -86,12 +87,12 @@ public class Store {
         this.location = location;
     }
 
-    public Set<User> getOwners() {
-        return owners;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setOwner(Set<User> owners) {
-        this.owners = owners;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public boolean isAccepted() {
@@ -108,8 +109,5 @@ public class Store {
 
     public void setProducts(List<Product> products) {
         this.products = products;
-    }
-    public void addOwners(Set <User> owners) {
-        this.owners.addAll(owners);
     }
 }

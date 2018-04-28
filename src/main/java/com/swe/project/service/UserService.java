@@ -1,14 +1,19 @@
 package com.swe.project.service;
 
+
 import com.swe.project.entity.User;
+import com.swe.project.entity.UserType;
 import com.swe.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.Set;
+
+@CrossOrigin
 @Service
 public class UserService {
+
 
     @Autowired
     UserRepository userRepository;
@@ -21,10 +26,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean register(User user){
+    public boolean register(User user, Set<UserType> userTypeSet){
         if(userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername()))
             return false; // CONFLICT or BAD_REQUEST ?
-       userRepository.save(user);
+
+
+        user.setUserTypes(userTypeSet);
+        userRepository.save(user);
         return true;
     }
 

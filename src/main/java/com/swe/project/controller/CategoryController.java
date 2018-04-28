@@ -19,8 +19,8 @@ public class CategoryController {
 
     @PostMapping(path = "/addCategory")
     public ResponseEntity<?> addCategory(@RequestParam String categoryName){
-        boolean existCategory = categoryService.addCategory(categoryName);
-        if(!existCategory)
+        boolean added = categoryService.addCategory(categoryName);
+        if(!added)
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
         return ResponseEntity.ok().build();

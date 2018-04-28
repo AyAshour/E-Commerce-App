@@ -1,15 +1,12 @@
 package com.swe.project.service;
 
-import com.swe.project.entity.Brand;
 import com.swe.project.entity.Category;
-import com.swe.project.repository.BrandRepository;
 import com.swe.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-
+@CrossOrigin
 @Service
 public class CategoryService {
 
@@ -26,5 +23,9 @@ public class CategoryService {
     public Iterable<Category> getAllCategories(){
         Iterable<Category> categories = categoryRepository.findAll();
         return categories;
+    }
+
+    public Category getCategoryById(Integer categoryId){
+        return categoryRepository.findCategoryByCategoryId(categoryId);
     }
 }

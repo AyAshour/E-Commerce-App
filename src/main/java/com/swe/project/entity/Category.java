@@ -1,9 +1,7 @@
 package com.swe.project.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Category {
@@ -12,6 +10,9 @@ public class Category {
     private Integer categoryId;
 
     public String name;
+
+/*    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    public List<Product> products;*/
 
     public Category(){
         name = "";

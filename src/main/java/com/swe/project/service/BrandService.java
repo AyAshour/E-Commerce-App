@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class BrandService {
 
     @Autowired
+
     private BrandRepository brandRepository;
     public boolean addBrand(String brandName){
         if(!brandRepository.existsByName(brandName)) {
@@ -24,5 +25,9 @@ public class BrandService {
     public Iterable<Brand> getAllBrands(){
         Iterable<Brand> brands = brandRepository.findAll();
         return brands;
+    }
+
+    public Brand getBrandById(Integer brandId){
+        return brandRepository.findBrandByBrandId(brandId);
     }
 }

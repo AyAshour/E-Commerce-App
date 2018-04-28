@@ -1,13 +1,12 @@
 package com.swe.project.controller;
 
+
 import com.swe.project.discounts.Discount;
 import com.swe.project.discounts.DiscountFactory;
 import com.swe.project.entity.*;
-import com.swe.project.repository.CartRepository;
-import com.swe.project.repository.ProductRepository;
-import com.swe.project.repository.StoreRepository;
-import com.swe.project.repository.UserRepository;
+
 import com.swe.project.service.CartService;
+
 import com.swe.project.service.ProductService;
 import com.swe.project.service.StoreService;
 import com.swe.project.service.UserService;
@@ -26,13 +25,17 @@ public class CartController {
     private CartService cartService;
 
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+
+    @Autowired
+    private DiscountFactory discountFactory;
 
     @PostMapping("/buyProducts")
     ResponseEntity<?> buyProducts(@RequestBody Cart cart)
@@ -60,11 +63,11 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
-    @Autowired
-    private DiscountFactory discountFactory;
 
     @GetMapping("/calculatePrice")
-    ResponseEntity<?> calculatePrice(@RequestBody User user, @RequestBody Cart cart){
+    ResponseEntity<?> calculatePrice(@RequestParam("username") String username, @RequestParam("cartId") Integer cartId){
+        User user = userService.findByUsername(username);
+        Cart cart = cartService.getCartById(cartId);
         double totalPrice = 0;
 
         // calculate price without discount
@@ -85,7 +88,7 @@ public class CartController {
 
 
     @PostMapping("/addProduct")
-    ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam Integer cartId, @RequestParam Integer storeId){
+    ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam("cartId") Integer cartId, @RequestParam("storeId") Integer storeId){
         Cart cart = cartService.getCartById(cartId);
 
         cart.getProducts().put(storeId, product);
@@ -107,18 +110,15 @@ public class CartController {
     @PostMapping("/assignCartToUser")
     ResponseEntity<?> assignCartToUser(@RequestBody User user){
         Cart cart = new Cart();
-
         cart.setUser(user);
         cartService.addCart(cart);
-
         user.setCart(cart);
         userService.saveUser(user);
-
         return ResponseEntity.status(HttpStatus.OK).body(cart);
     }
 
-    @PostMapping("/getCartByUser")
-    ResponseEntity<?> getCart(User user){
+    @GetMapping("/getCartByUser")
+    ResponseEntity<?> getCart(@RequestBody  User user){
         return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartByUser(user));
     }
 }

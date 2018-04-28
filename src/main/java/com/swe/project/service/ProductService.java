@@ -1,17 +1,17 @@
 package com.swe.project.service;
 
+
 import com.swe.project.entity.Product;
-import com.swe.project.entity.Store;
+
 import com.swe.project.repository.ProductRepository;
-import com.swe.project.repository.StoreRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.List;
-import java.util.Optional;
 
+@CrossOrigin
 @Service
 public class ProductService {
 
@@ -58,4 +58,5 @@ public class ProductService {
         product.setPrice(discount * product.getPrice());
         productRepo.save(product);
     }
+
 }

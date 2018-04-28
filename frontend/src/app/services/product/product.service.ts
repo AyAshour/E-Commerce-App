@@ -15,9 +15,7 @@ export class ProductService {
     return this.http.post(this.baseURL+"addProductToSystem", product);
   }
 
-  addProductToStore(product: any, storeId: any){
-    return this.http.post(this.baseURL+"addProductToStore?"+storeId, product);
-  }
+
 
 
 }

@@ -3,7 +3,6 @@ package com.swe.project.controller;
 import com.swe.project.actions.ActionHandler;
 import com.swe.project.actions.ActionHandlerFactory;
 import com.swe.project.entity.*;
-import com.swe.project.repository.StoreRepository;
 import com.swe.project.service.ActionsService;
 import com.swe.project.service.ProductService;
 import com.swe.project.service.StoreService;
@@ -13,11 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
-import java.util.Set;
-
 
 @CrossOrigin
 @RestController
@@ -71,24 +66,23 @@ public class StoreController {
     }
 
 
-    @Autowired
-    StoreRepository storeRepository;
     @PostMapping(path = "/addStore")
     public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
-
         User user = userService.findByUsername(ownerUsername);
-        store.setOwner(user); // can i send it inside Store from the front end.
-       //storeService.addStore(store);
-        storeRepository.save(store);
+
+        if(user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        store.setOwner(user);
+        storeService.addStore(store);
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/acceptStore")
-    public ResponseEntity<?> acceptStore(@RequestParam Integer id){
+
+    public ResponseEntity<?> acceptStore(@RequestParam("storeId") Integer id){
         Store targetStore = storeService.getStoreById(id);
-        storeService.deleteStore(targetStore); // to avoid duplicated data
-        targetStore.accepted=true;
         targetStore.setAccepted(true);
         storeService.addStore(targetStore);
         return ResponseEntity.ok().build();
@@ -120,6 +114,7 @@ public class StoreController {
     }
 
 
+
     @PostMapping("/addProductToStore")
     ResponseEntity<?> addProductToStore(@RequestBody Product product, @RequestParam("storeId") Integer storeId){
 
@@ -130,7 +125,6 @@ public class StoreController {
            Action action = new ProductActions(product);
            action.setStore(store);
            action.setType("insertProduct");
-
            actionHandler = actionHandlerFactory.getHandler("product");
            actionHandler.doAction(action);
        }
@@ -156,7 +150,14 @@ public class StoreController {
         return ResponseEntity.status(HttpStatus.OK).body(store);
     }
 
-
+    @GetMapping(path = "/getStoreProducts")
+    public ResponseEntity<?> getStoreProducts(@RequestParam("storeId") Integer storeId) {
+        List<Product> products = storeService.getStoreProducts(storeId);
+        if (products.equals(null))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
     @PostMapping("/addDiscountToProduct")
     public ResponseEntity<?> addDiscount(@RequestBody Product product, @RequestParam double discount) {
         productService.ApplyDiscount(product, discount);

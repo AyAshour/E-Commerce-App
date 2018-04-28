@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>In Door</title>
+  <meta charset="utf-8">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+    <div class="navbar-header navbar-left">
+      <h3 class="navText">In Door</h3>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+
+      <li class="nav-item">
+        <div >
+          <h4>
+            <span class="glyphicon glyphicon-user" style="color: white">
+              <span class="navText">| {{currentUser?.username}}</span>
+            </span>
+          </h4>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</nav>
+
+<div *ngIf="collaborator ">
+
+  <app-collborator></app-collborator>
+
+  <div *ngIf="admin">
+    <app-admin-page></app-admin-page>
+  </div>
+
+</div>
+
+<div *ngIf="customer">
+  <app-customer-page></app-customer-page>
+</div>
+
+<div *ngIf="storeOwner">
+  <app-store-owner-page></app-store-owner-page>
+</div>
+
+</body>
+</html>
