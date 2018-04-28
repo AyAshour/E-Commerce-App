@@ -26,6 +26,7 @@ public class Product {
     public double price;
     public boolean inStock;
     public Integer quantity;
+
     @ManyToOne
     @JoinColumn(name = "brandId")
     public Brand brand;
@@ -33,9 +34,9 @@ public class Product {
    /* @ManyToMany
     public List<User> viewers = null;*/
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "categoryId")
-    private Category category;
+    public Category category;
 
 
     public Product() {

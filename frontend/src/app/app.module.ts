@@ -9,6 +9,7 @@ import {ProductService} from "./services/product/product.service";
 import {BrandService} from "./services/brand/brand.service";
 import {CategoryService} from "./services/category/category.service";
 import {CartService} from "./services/cart/cart.service";
+import {ActionService} from "./services/action/action.service";
 import {HttpModule} from "@angular/http";
 import { AddProductToStoreComponent } from './add-product-to-store/add-product-to-store.component';
 import { AddProductToSystemComponent } from './add-product-to-system/add-product-to-system.component';
@@ -26,12 +27,15 @@ import { AuthenticationGuard} from "./guards/authentication/authentication.guard
 import { CollboratorComponent } from './collborator-page/collborator.component';
 import { ViewAllStoresComponent} from "./view-all-stores/view-all-stores.component";
 import { ViewMyStoresComponent } from './view-my-stores/view-my-stores.component';
+import { ViewStatisticsComponent } from './view-statistics/view-statistics.component';
+import { ViewStoreHistoryComponent } from './view-store-history/view-store-history.component';
 
 const appRoutes: Routes = [
   {path: '', component: HomePageComponent },
   {path: 'user', canActivate: [AuthenticationGuard] , component: UserPageComponent},
   {path: 'admin', component: AdminPageComponent },
   {path: 'customer', component: CustomerPageComponent},
+  {path: 'viewStoreProducts', component: ViewProductsComponent}
 
 ];
 
@@ -53,7 +57,9 @@ const appRoutes: Routes = [
     UserPageComponent,
     CollboratorComponent,
     ViewAllStoresComponent,
-    ViewMyStoresComponent
+    ViewMyStoresComponent,
+    ViewStatisticsComponent,
+    ViewStoreHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +70,7 @@ const appRoutes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [StoreService, UserService, ProductService, BrandService, CategoryService, CartService, AuthenticationGuard],
+  providers: [StoreService, UserService, ProductService, BrandService, CategoryService, CartService, ActionService, AuthenticationGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

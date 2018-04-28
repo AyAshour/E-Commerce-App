@@ -4,7 +4,9 @@ import com.swe.project.entity.Category;
 import com.swe.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Service
 public class CategoryService {
 
@@ -21,5 +23,9 @@ public class CategoryService {
     public Iterable<Category> getAllCategories(){
         Iterable<Category> categories = categoryRepository.findAll();
         return categories;
+    }
+
+    public Category getCategoryById(Integer categoryId){
+        return categoryRepository.findCategoryByCategoryId(categoryId);
     }
 }

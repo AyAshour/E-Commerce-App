@@ -32,4 +32,5 @@ export class ViewCartComponent implements OnInit {
       this.cart = response;
     })
   }
+
 }

@@ -11,6 +11,8 @@ import {ProductService} from "../services/product/product.service";
 export class AddProductToSystemComponent implements OnInit {
   public brands: any[];
   public categories: any[];
+  public choosenCategory : any = null;
+  public choosenBrand : any = null;
   public product = {
     "name" : "",
     "priceRange" : "",
@@ -19,7 +21,7 @@ export class AddProductToSystemComponent implements OnInit {
     "brandId" : 0,
     "inStock" : 1
   }
-  private res;
+  private response;
 
   constructor(private brandService: BrandService, private categoryService: CategoryService, private productService: ProductService ) { }
 
@@ -29,9 +31,11 @@ export class AddProductToSystemComponent implements OnInit {
   }
 
   addProduct(){
+    this.product.brandId = this.choosenBrand.id;
+    this.product.categoryId = this.choosenCategory.id;
     this.productService.addProductToSystem(this.product).subscribe(response => {
       console.log(response);
-      this.res = response;
+      this.response = response;
     });
   }
 }

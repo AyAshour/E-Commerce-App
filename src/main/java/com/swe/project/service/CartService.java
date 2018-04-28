@@ -5,7 +5,9 @@ import com.swe.project.entity.User;
 import com.swe.project.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @Service
 public class CartService {
 

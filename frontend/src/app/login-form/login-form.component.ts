@@ -35,25 +35,15 @@ export class LoginFormComponent implements OnInit {
     else{
       this.userService.loginByUserName(this.username_email, this.password).subscribe(response => {
         this.response = response;
-        /*console.log("from component: ");
-        console.log(this.response);*/
+        this.userService.setLoggedIn(true);
+        console.log(this.userService.getLoggedIn());
       },error => {
-        //this.valid = error.ok;
-        this.valid = false;
-        console.log("from else: "+this.valid);
-        console.log(error.status);
+        this.userService.setLoggedIn(false);
+        /*console.log("from else: "+this.valid);
+        console.log(error.status);*/
       })
     }
-
-    if(this.valid){
-      console.log("from the if: " + this.valid)
-      this.router.navigate(['user']);
-      this.valid = false;
-    }
-    else{
-      // stay in same page
-    }
-
+    this.router.navigate(['user']);
   }
   ngOnInit() {
 

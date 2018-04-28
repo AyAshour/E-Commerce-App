@@ -69,15 +69,19 @@ public class StoreController {
     @PostMapping(path = "/addStore")
     public ResponseEntity<?> addStore(@RequestBody Store store, @RequestParam String ownerUsername){
         User user = userService.findByUsername(ownerUsername);
-        store.setOwner(user); // can i send it inside Store from the front end.
-       storeService.addStore(store);
+
+        if(user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        store.setOwner(user);
+        storeService.addStore(store);
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/acceptStore")
 
-    public ResponseEntity<?> acceptStore(@RequestParam Integer id){
+    public ResponseEntity<?> acceptStore(@RequestParam("storeId") Integer id){
         Store targetStore = storeService.getStoreById(id);
         targetStore.setAccepted(true);
         storeService.addStore(targetStore);
@@ -147,8 +151,8 @@ public class StoreController {
     }
 
     @GetMapping(path = "/getStoreProducts")
-    public ResponseEntity<?> getStoreProducts(Integer storeID) {
-        List<Product> products = storeService.getStoreProducts(storeID);
+    public ResponseEntity<?> getStoreProducts(@RequestParam("storeId") Integer storeId) {
+        List<Product> products = storeService.getStoreProducts(storeId);
         if (products.equals(null))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         else

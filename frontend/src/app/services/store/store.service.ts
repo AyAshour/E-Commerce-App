@@ -8,7 +8,7 @@ import {Observer} from "rxjs/Observer";
 @Injectable()
 export class StoreService {
   private baseURL: String = "http://localhost:8080/store/";
-  private currentSelected: object = null;
+  private currentSelected: any = null;
 
   constructor(private http: Http) { }
 
@@ -16,24 +16,33 @@ export class StoreService {
     return this.http.get(this.baseURL+"getUnAcceptedStores").map((response => response.json()));
   }
 
-  acceptStore(id){
-    console.log("id: "+this.baseURL+"acceptStore?id="+id);
-    this.http.post(this.baseURL+"acceptStore?id="+id, {
+  acceptStore(storeId){
+    this.http.post(this.baseURL+"acceptStore?storeId="+storeId, {
       parameters: {
-        id: id
+        "id" : storeId
       }
     });
   }
-  getStoreProducts(){
-    return this.http.get(this.baseURL+"/getStoreProducts").map(response => response.json());
+  getAcceptedStores(){
+    return this.http.get(this.baseURL + "getAcceptedStores").map(response => {
+      console.log("from srvc" + response);
+      response.json();
+    });
+  }
+  getStoreProducts(storeId){
+    return this.http.get(this.baseURL+"getStoreProducts"+storeId).map(response => response.json());
   }
 
-  setCurrentSelectedStore(){
-
+  setCurrentSelectedStore(store : any){
+    this.currentSelected = store;
   }
 
   getCurrentSelectedStore(){
+    return this.currentSelected;
+  }
 
+  addProductToStore(product: any, storeId: any){
+    return this.http.post(this.baseURL+"addProductToStore?storeId="+storeId, product);
   }
 
 }

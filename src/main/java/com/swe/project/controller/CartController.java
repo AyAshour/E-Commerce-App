@@ -25,13 +25,17 @@ public class CartController {
     private CartService cartService;
 
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+
+    @Autowired
+    private DiscountFactory discountFactory;
 
     @PostMapping("/buyProducts")
     ResponseEntity<?> buyProducts(@RequestBody Cart cart)
@@ -60,11 +64,10 @@ public class CartController {
     }
 
 
-    @Autowired
-    private DiscountFactory discountFactory;
-
     @GetMapping("/calculatePrice")
-    ResponseEntity<?> calculatePrice(@RequestBody User user, @RequestBody Cart cart){
+    ResponseEntity<?> calculatePrice(@RequestParam("username") String username, @RequestParam("cartId") Integer cartId){
+        User user = userService.findByUsername(username);
+        Cart cart = cartService.getCartById(cartId);
         double totalPrice = 0;
 
         // calculate price without discount
@@ -85,7 +88,7 @@ public class CartController {
 
 
     @PostMapping("/addProduct")
-    ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam Integer cartId, @RequestParam Integer storeId){
+    ResponseEntity<?> addProductToCart(@RequestBody Product product, @RequestParam("cartId") Integer cartId, @RequestParam("storeId") Integer storeId){
         Cart cart = cartService.getCartById(cartId);
 
         cart.getProducts().put(storeId, product);

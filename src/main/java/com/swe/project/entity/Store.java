@@ -19,13 +19,23 @@ public class Store {
     public String location;
     public boolean accepted;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "ownerId")
     private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "productId", cascade = CascadeType.ALL)//manytomany
-    //@JoinColumn(name = "productId")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="store_products",
+            joinColumns=@JoinColumn(name="storeId", referencedColumnName="storeId"),
+            inverseJoinColumns=@JoinColumn(name="productId", referencedColumnName="productId"))
     private List<Product> products;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="store_collaborators",
+            joinColumns=@JoinColumn(name="storeId", referencedColumnName="storeId"),
+            inverseJoinColumns=@JoinColumn(name="username", referencedColumnName="username"))
+    private Set<User> collaborators;
 
 
     public Store(String name, String type, String location, User owner) {

@@ -7,10 +7,12 @@ import com.swe.project.entity.Store;
 import com.swe.project.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.TreeSet;
 
+@CrossOrigin
 @Service
 public class StoreService {
 
@@ -40,7 +42,7 @@ public class StoreService {
             return null;
 
         List<Product> products =  store.getProducts();
-        products.add(product);
+        products.add(existProduct);
         store.setProducts(products);
         storeRepository.save(store);
 
@@ -48,7 +50,7 @@ public class StoreService {
 
         Integer existQuantity = existProduct.getQuantity();
         existProduct.setQuantity(existQuantity + addedQuantity);
-        productService.addProduct(product);
+        productService.addProduct(existProduct);
         System.out.println("store is "+store.getName());
         return store;
     }

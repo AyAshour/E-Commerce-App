@@ -26,4 +26,8 @@ public class BrandService {
         Iterable<Brand> brands = brandRepository.findAll();
         return brands;
     }
+
+    public Brand getBrandById(Integer brandId){
+        return brandRepository.findBrandByBrandId(brandId);
+    }
 }

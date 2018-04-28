@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 
+import java.util.HashSet;
 import java.util.List;
 
 import java.util.Set;
@@ -18,10 +19,35 @@ public class User {
     @Id
     public String username;
 
-    public String type;
     public String email;
     private String password;
 
+    @OneToOne
+    @JoinColumn(name = "cartId")
+    private Cart cart;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="user_types",
+            joinColumns=@JoinColumn(name="username", referencedColumnName="username"),
+            inverseJoinColumns=@JoinColumn(name="userType", referencedColumnName="userType"))
+    private Set<UserType> userTypes;
+
+    public User(String email, String username, String password, Set<UserType> userTypes) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.userTypes = userTypes;
+        this.cart = null;
+    }
+
+    public User() {
+        this.email = "";
+        this.username = "";
+        this.password = "";
+        this.userTypes = new HashSet<>();
+        this.cart = null;
+    }
 
    /* @OneToMany
     public Set<Product> buyProducts;
@@ -37,9 +63,7 @@ public class User {
     public Set<Product> viewedProducts;*/
 
 
-    @OneToOne
-    @JoinColumn(name = "cartId")
-    private Cart cart;
+
 
    /* @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
     private List<UserType> userRoles;
@@ -89,21 +113,6 @@ public class User {
         this.userRoles = userRoles;
     }*/
 
-    public User(UserType type, String email, String username, String password, List<UserType> userTypeset) {
-       // this.type = type.getType();
-        this.email = email;
-        this.username = username;
-        this.password = password;
-       // userRoles = userTypeset;
-    }
-
-    public User() {
-      //  this.type = UserType.customer.getType();
-        this.email = "";
-        this.username = "";
-        this.password = "";
-    }
-
     public String getUsername() {
         return username;
     }
@@ -112,13 +121,14 @@ public class User {
         this.username = username;
     }
 
-    public String getType() {
-        return type;
+    public Set<UserType> getUserTypes() {
+        return this.userTypes;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserTypes(Set<UserType> userTypes) {
+        this.userTypes = userTypes;
     }
+
 
     public String getEmail() {
         return email;

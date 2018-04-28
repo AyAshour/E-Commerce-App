@@ -44,11 +44,11 @@ export class UserService {
 
     return this.currentUser;*/
   }
-  setLoggedIn(){
-    this.loggedIn = false;
+  setLoggedIn(isLoggedIn : boolean){
+    this.loggedIn = isLoggedIn;
   }
   getLoggedIn(){
-
+    return this.loggedIn;
   }
   isAdmin(){
     return true;

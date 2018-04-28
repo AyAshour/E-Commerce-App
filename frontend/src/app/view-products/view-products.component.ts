@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StoreService} from "../services/store/store.service";
+import {current} from "codelyzer/util/syntaxKind";
 
 @Component({
   selector: 'app-view-products',
@@ -7,7 +8,13 @@ import { StoreService} from "../services/store/store.service";
   styleUrls: ['./view-products.component.css']
 })
 export class ViewProductsComponent implements OnInit {
-  public products = [
+  public currentStore = {
+    "id" : "",
+    "name" : ""
+  };
+  public products : any = [];
+
+ /* public products = [
     {
       "name" : "p1",
       "price" : "1",
@@ -35,11 +42,20 @@ export class ViewProductsComponent implements OnInit {
       "category" : "c1"
     }
   ];
-
+*/
   constructor(private storeService : StoreService) { }
 
   ngOnInit() {
-    this.storeService.getStoreProducts().subscribe(products => {
+    this.setCurrentStore();
+    this.setProducts();
+  }
+
+  setCurrentStore(){
+    this.currentStore = this.storeService.getCurrentSelectedStore();
+  }
+
+  setProducts(){
+    this.storeService.getStoreProducts(this.currentStore.id).subscribe(products => {
       this.products = products;
       console.log(products);
     });

@@ -11,17 +11,11 @@ export class ProductService {
     return this.http.get(this.baseURL+"getAll").map((response => response.json()));
   }
 
-  getProductsInStore(storeID : any){
-
-  }
-
   addProductToSystem(product: any){
     return this.http.post(this.baseURL+"addProductToSystem", product);
   }
 
-  addProductToStore(product: any, storeId: any){
-    return this.http.post(this.baseURL+"addProductToStore?"+storeId, product);
-  }
+
 
 
 }

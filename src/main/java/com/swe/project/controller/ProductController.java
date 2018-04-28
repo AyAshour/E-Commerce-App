@@ -1,7 +1,11 @@
 package com.swe.project.controller;
 
+import com.swe.project.entity.Brand;
+import com.swe.project.entity.Category;
 import com.swe.project.entity.Product;
 import com.swe.project.repository.ProductRepository;
+import com.swe.project.service.BrandService;
+import com.swe.project.service.CategoryService;
 import com.swe.project.service.ProductService;
 import com.swe.project.service.ShippingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +24,28 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    ShippingService shippingService;
+    @Autowired
+    private ShippingService shippingService;
+
+    @Autowired
+    private BrandService brandService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @PostMapping("/addProductToSystem")
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> addProduct(@RequestBody Product product, @RequestParam("brandId") Integer brandId, @RequestParam("categoryId") Integer categoryId) {
+        Brand brand = brandService.getBrandById(brandId);
+        Category category = categoryService.getCategoryById(categoryId);
 
+        if(brand == null || category == null)
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        product.setBrand(brand);
+        product.setCategory(category);
+        productService.addProduct(product);
+
+        return ResponseEntity.ok().build();
     }
 
 

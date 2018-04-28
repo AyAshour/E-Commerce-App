@@ -27,8 +27,8 @@ public class BrandController {
     @PostMapping("/addBrand")
     @ResponseBody
     ResponseEntity<?> addBrand(@RequestParam  String brandName) {
-        boolean existBrand =brandService.addBrand(brandName);
-        if(!existBrand) {
+        boolean added =brandService.addBrand(brandName);
+        if(added) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
