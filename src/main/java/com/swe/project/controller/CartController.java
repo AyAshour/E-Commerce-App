@@ -65,7 +65,7 @@ public class CartController {
 
 
     @GetMapping("/calculatePrice")
-    ResponseEntity<?> calculatePrice(@RequestParam("username") String username, @RequestParam("cartId") Integer cartId){
+   public ResponseEntity<?> calculatePrice(@RequestParam("username") String username, @RequestParam("cartId") Integer cartId){
         User user = userService.findByUsername(username);
         Cart cart = cartService.getCartById(cartId);
         double totalPrice = 0;
@@ -76,13 +76,11 @@ public class CartController {
         }
 
         // apply discount on price
-        Discount discount;
-
-         /*for(UserType u : user.getUserRoles()){
-              discount = discountFactory.getDiscount();
+         Discount discount;
+         for(UserType u : user.getUserTypes()){
+              discount = discountFactory.getDiscount(u.getUserType().getType());
               totalPrice = discount.applyDiscount(totalPrice);
          }
-*/
         return ResponseEntity.status(HttpStatus.OK).body(totalPrice);
     }
 

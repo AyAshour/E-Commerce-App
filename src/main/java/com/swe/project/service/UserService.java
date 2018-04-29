@@ -30,7 +30,6 @@ public class UserService {
         if(userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername()))
             return false; // CONFLICT or BAD_REQUEST ?
 
-
         user.setUserTypes(userTypeSet);
         userRepository.save(user);
         return true;
