@@ -49,6 +49,15 @@ public class User {
         this.cart = null;
     }
 
+
+    public User(String name) {
+        this.username = name;
+        this.email = "";
+        this.password = "";
+        this.userTypes = new HashSet<>();
+        this.cart = null;
+    }
+
    /* @OneToMany
     public Set<Product> buyProducts;
 
