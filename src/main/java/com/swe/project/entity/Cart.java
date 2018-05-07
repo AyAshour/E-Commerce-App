@@ -15,12 +15,18 @@ public class Cart {
     @JoinColumn(name = "userId")
     User user;
 
-    @OneToMany(targetEntity = Product.class)
+    @OneToMany(targetEntity = Product.class, fetch = FetchType.EAGER)
     Map<Integer,Product> products;
 
     public Cart() {
         this.user = null;
         this.products = null;
+    }
+
+    public Cart(Integer cartId, User user, Map<Integer, Product> products) {
+        this.cartId = cartId;
+        this.user = user;
+        this.products = products;
     }
 
     public Cart(User user, Map<Integer, Product> products) {
