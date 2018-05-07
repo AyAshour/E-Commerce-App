@@ -24,14 +24,7 @@ public class UserRepositoryTest {
     @Autowired
     private  UserRepository userRepository;
 
-    @Before
-    public void setUp() throws Exception {
 
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void findByUsername() throws Exception {
@@ -43,16 +36,6 @@ public class UserRepositoryTest {
         assert (found.username.equals(user.username));
     }
 
-    @Test
-    public void findByEmail() throws Exception {
-    }
 
-    @Test
-    public void existsByEmail() throws Exception {
-    }
-
-    @Test
-    public void existsByUsername() throws Exception {
-    }
 
 }
