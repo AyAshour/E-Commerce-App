@@ -9,7 +9,9 @@ import {UserService} from "../services/user/user.service";
 export class RegisterFormComponent implements OnInit {
 
   private response : object = null;
+  private valid : boolean = false;
   public user = {
+    "type" : 2,
     "email" : "",
     "username" : "",
     "password" : ""
@@ -26,7 +28,12 @@ export class RegisterFormComponent implements OnInit {
       error => {
         console.log(error.status);
         console.log(error.ok);
+        this.valid = error.ok;
       });
+
+    if(this.valid){
+      // go to page according to your type
+    }
   }
 
 

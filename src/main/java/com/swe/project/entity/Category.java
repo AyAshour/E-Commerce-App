@@ -1,17 +1,18 @@
 package com.swe.project.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer categoryId;
 
     public String name;
+
+/*    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    public List<Product> products;*/
 
     public Category(){
         name = "";
@@ -22,11 +23,11 @@ public class Category {
     }
 
     public int getId() {
-        return id;
+        return categoryId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.categoryId = id;
     }
 
     public String getName() {

@@ -1,59 +1,73 @@
 package com.swe.project.controller;
 
 import com.swe.project.entity.User;
-import com.swe.project.entity.Store;
-import com.swe.project.repository.CartRepository;
-import com.swe.project.repository.UserRepository;
+import com.swe.project.entity.UserType;
+import com.swe.project.service.UserService;
+import com.swe.project.service.UserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    private CartRepository cartRepository;
+    private UserTypeService userTypeService;
 
-    @Autowired
-    private CartController  cartController;
-    @PostMapping("/register")
-    public  ResponseEntity<?> register(@RequestBody  User user) {
-        System.out.println(user.username);
-        if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername()))
+
+
+
+    @PostMapping(value = "/register")
+    public ResponseEntity<?> register(@RequestBody User user, @RequestParam("type") List<String> userTypesList){
+
+        Set<UserType> userTypeSet = new HashSet<>();
+
+        for(String role : userTypesList){
+            UserType UT = new UserType();
+            UT.setUserType(UserType.Type.valueOf(role));
+            userTypeService.addUserType(UT);
+            userTypeSet.add(UT);
+        }
+
+        boolean existUser = userService.register(user, userTypeSet);
+        if(!existUser)
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); // CONFLICT or BAD_REQUEST ?
-        cartController.assignCartToUser(user);
+
+
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/login/byUserName")
-    public ResponseEntity<?> loginByUserName(@RequestParam String username, @RequestParam String password) {
-        User user = userRepository.findByUsername(username);
-        if (user != null && password.equals(user.getPassword()))
+    public ResponseEntity<?> loginByUserName(@RequestParam String username, @RequestParam String password){
+        User user = userService.findByUsername(username);
+        if(user != null && password.equals(user.getPassword()))
             return ResponseEntity.ok().body(user);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/login/byEmail")
-    public ResponseEntity<?> loginByEmail(@RequestParam String email, @RequestParam String password) {
-        User user = userRepository.findByEmail(email);
-        if (user != null && password.equals(user.getPassword()))
+
+    public ResponseEntity<?> loginByEmail(@RequestParam String email, @RequestParam String password){
+        User user = userService.findByEmail(email);
+        if(user != null && password.equals(user.getPassword()))
             return ResponseEntity.ok().body(user);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PostMapping("/addCollaborators")
+    /*@PostMapping("/addCollaborators")
     public void addCollaborators(Set<String> usersID, String ownerID) {
         List<User> users = new ArrayList<>();
         for (String ID : usersID) {
@@ -75,5 +89,5 @@ public class UserController {
             }
             owner.addCollaborators(owners);
         }
-    }
+    }*/
 }

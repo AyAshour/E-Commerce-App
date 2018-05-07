@@ -9,7 +9,7 @@
     Store name: {{store.name}}<br>
     Store type: {{store.type}}<br>
     Store location: {{store.location}}<br>
-    <button class="btn btn-default btn-lg" onclick=this.acceptStore()>accept</button>
+    <button class="btn btn-default btn-lg" (click)=this.acceptStore()>accept</button>
     <button class="btn btn-default btn-lg">remove</button>
   </div>
 
@@ -17,4 +17,80 @@
 </div>
 -->
 
-<h1>Stores are here!</h1>
+
+<!--<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+</head>-->
+
+
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading text-center"><strong>Stores Requestes</strong></div>
+
+    <div class="panel-body">
+
+      <div *ngFor="let store of unacceptedStores">
+        <div  class="row">
+          <div class="col-xs-6 text-center">
+            <div class="col-xs-2 text-center">
+              <h4> <strong>{{store.name}}</strong> </h4>
+            </div>
+
+            <div class="col-xs-2 text-center">
+              <h4> <strong>{{store.owner.username}}</strong> </h4>
+            </div>
+          </div>
+
+          <div class="col-xs-6 text-right">
+            <div class="col-xs-2 text-center">
+              <button type="button" class="btn btn-success" (click)=acceptStore(store)>accept</button>
+            </div>
+
+            <div class="col-xs-2 text-center">
+              <button type="button" class="btn btn-danger">reject</button>
+            </div>
+
+          </div>
+
+        </div>
+      <hr>
+      </div>
+
+      <!--<div class="row">
+        <div class="col-xs-6 text-center">
+          <div class="col-xs-2 text-center">
+            <h4> <strong>Store name</strong> </h4>
+          </div>
+
+          <div class="col-xs-2 text-center">
+            <h4> <strong>Owner username</strong> </h4>
+          </div>
+        </div>
+        <div class="col-xs-6 text-center">
+          <div class="col-xs-2 text-center">
+            <button type="button" class="btn btn-success">accept</button>
+          </div>
+
+          <div class="col-xs-2 text-center">
+            <button type="button" class="btn btn-danger">reject</button>
+          </div>
+
+        </div>
+      </div>-->
+
+    </div>
+  </div>
+</div>
+
+
+
+

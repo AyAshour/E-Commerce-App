@@ -8,8 +8,7 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 
-import java.util.List;
-
+import java.util.HashSet;
 import java.util.List;
 
 import java.util.Set;
@@ -21,87 +20,64 @@ public class User {
 
     @Id
     public String username;
-    public String type;
+
     public String email;
     private String password;
-
-
-    @OneToMany
-    public Set<Product> buyProducts;
-
-
-    public Set<User> collaborators;
-
-    @OneToMany
-    public Set<Store> stores;
-
-    @ManyToMany
-    public Set<Product> viewedProducts;
 
     @OneToOne
     @JoinColumn(name = "cartId")
     private Cart cart;
 
-    public User(String ownerUsername) {
-        this.username = ownerUsername;
-        this.type = userType.customer.getType();
-        this.email = "";
-        this.password = "";
-        cart = new Cart(this,null);
-        cartRepository.save(cart);
-    }
-    public User(){
-        this.username = "";
-        this.type= "";
-        this.email  = "";
-        this.password = "";
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinTable(
+            name="user_types",
+            joinColumns=@JoinColumn(name="username", referencedColumnName="username"),
+            inverseJoinColumns=@JoinColumn(name="userTypeId", referencedColumnName="userTypeId"))
+    private Set<UserType> userRoles;
 
-    }
+    @ManyToMany
+    private Set<Product> buyProducts;
 
+    @ManyToMany
+    private Set<Product> viewedProducts;
 
+    @OneToMany
+    private Set<Store> stores;
 
-
-
-
-    public static enum userType {
-        admin("admin"), customer("customer"), storeOwner("owner");
-        public String type;
-
-        userType(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public static userType parse(String type) {
-            for (userType type1 : userType.values()) {
-                if (type1.type == type) {
-                    return type1;
-                }
-            }
-            return null;
-        }
-    }
-
-
-    public User(userType type, String email, String username, String password) {
-        this.type = type.getType();
+    public User(String email, String username, String password, Set<UserType> userRoles) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.userRoles = userRoles;
+        this.cart = null;
     }
 
-    public User(String owner, String email, String username, String password) {
-        this.type = userType.customer.getType();
+    public User() {
         this.email = "";
         this.username = "";
         this.password = "";
+    }
+
+    public User(String ownerUsername , UserType type) {
+        this.username = ownerUsername;
+        userRoles = new HashSet<>();
+        userRoles.add(type);
+        this.email = "";
+        this.password = "";
+        cart = new Cart(this,null);
+    }
+
+
+    public Set<UserType> getUserRoles() {
+        if(this.userRoles == null) {
+            this.userRoles = new HashSet<UserType>();
+        }
+        return userRoles;
+    }
+
+
+    public void setUserRoles(Set<UserType> userRoles) {
+        this.userRoles = userRoles;
     }
 
     public String getUsername() {
@@ -112,13 +88,6 @@ public class User {
         this.username = username;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getEmail() {
         return email;
@@ -128,20 +97,23 @@ public class User {
         this.email = email;
     }
 
-    public Set<Store> getStores() {
-        return stores;
-    }
-
-    public void setStores(Set<Store> stores) {
-        this.stores = stores;
-    }
 
     public Set<Product> getViewedProducts() {
+        if(this.viewedProducts == null) {
+            this.viewedProducts = new HashSet<Product>();
+        }
         return viewedProducts;
     }
 
     public void setViewedProducts(Set<Product> viewedProducts) {
         this.viewedProducts = viewedProducts;
+    }
+
+    public void addViewedProduct(Product p) {
+        if(this.viewedProducts == null) {
+            this.viewedProducts = new HashSet<Product>();
+        }
+        this.viewedProducts.add(p);
     }
 
     public String getPassword() {
@@ -153,6 +125,9 @@ public class User {
     }
 
     public Cart getCart() {
+        if(this.cart == null) {
+            this.cart = new Cart();
+        }
         return cart;
     }
 
@@ -160,13 +135,24 @@ public class User {
         this.cart = cart;
     }
 
+
+    private void inintStores() {
+        if(this.stores == null) {
+            this.stores = new HashSet<Store>();
+        }
+    }
     public void addStores(Set<Store> stores) {
+        inintStores();
         this.stores.addAll(stores);
     }
-    public void addCollaborators(Set<User> Collaborators) {
-        this.collaborators(Collaborators);
+
+    public void addStore(Store store) {
+        inintStores();
+        this.stores.add(store);
     }
 
-    private void collaborators(Set<User> collaborators) {
+    public  Set<Store> getStores() {
+        inintStores();
+        return this.stores;
     }
 }

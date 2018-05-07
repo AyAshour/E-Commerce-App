@@ -4,6 +4,7 @@ import com.swe.project.entity.Brand;
 import com.swe.project.entity.Product;
 import com.swe.project.repository.BrandRepository;
 import com.swe.project.repository.ProductRepository;
+import com.swe.project.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +16,19 @@ import java.util.HashMap;
 @RestController
 @RequestMapping(value = "/brand")
 public class BrandController {
-    @Autowired
-    private BrandRepository brandRepo;
 
     @Autowired
+    private BrandService brandService;
+    @Autowired
     private ProductController productController;
+
 
 
     @PostMapping("/addBrand")
     @ResponseBody
     ResponseEntity<?> addBrand(@RequestParam  String brandName) {
-        if(!brandRepo.existsByName(brandName)) {
-            Brand brand = new Brand(brandName);
-            brandRepo.save(brand);
+        boolean added =brandService.addBrand(brandName);
+        if(added) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -35,7 +36,7 @@ public class BrandController {
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll() {
-        Iterable<Brand> brands = brandRepo.findAll();
+        Iterable<Brand> brands = brandService.getAllBrands();
         if(brands.equals(null))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         else
@@ -51,14 +52,11 @@ public class BrandController {
         Integer mxOrderedBrand = 0;
         Brand ret = new Brand();
         for(Product p:products) {
-<<<<<<< HEAD
-            Brand brand = p.brand;
-            String name = brand.name;
-=======
+
             Integer id = p.getBrandId();
             Brand brand = brandRepo.findById(id);
             String name = brand.getName();
->>>>>>> e61d8fa615ed9c0f6042e9ebf623111e1caa8017
+
             if(!mp.containsKey(name)) {
                 mp.put(name, 1);
             }

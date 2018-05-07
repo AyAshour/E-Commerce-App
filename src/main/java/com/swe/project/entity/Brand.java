@@ -1,6 +1,7 @@
 package com.swe.project.entity;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,11 +16,12 @@ import javax.persistence.Id;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    public String name,category;
+    private Integer brandId;
 
-    @OneToMany
-    public List<Product> products;
+    public String name;
+
+/*    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
+    public List<Product> products;*/
 
     public Brand(){
         name="";
@@ -30,11 +32,11 @@ public class Brand {
     }
 
     public int getId() {
-        return id;
+        return brandId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.brandId = id;
     }
 
     public String getName() {
