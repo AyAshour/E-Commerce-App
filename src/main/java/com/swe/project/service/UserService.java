@@ -31,7 +31,7 @@ public class UserService {
             return false; // CONFLICT or BAD_REQUEST ?
 
 
-        user.setUserTypes(userTypeSet);
+        user.setUserRoles(userTypeSet);
         userRepository.save(user);
         return true;
     }

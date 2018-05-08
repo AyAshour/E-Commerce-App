@@ -31,11 +31,19 @@ public class Product {
     @JoinColumn(name = "brandId")
     public Brand brand;
 
-   /* @ManyToMany
-    public List<User> viewers = null;*/
+    @ManyToOne
+    public Store store;
+
 
     @ManyToOne
+    public User buyer;
+
+    @ManyToMany
+    public List<User> viewers;
+
+
     @JoinColumn(name = "categoryId")
+    @ManyToOne
     public Category category;
 
 
@@ -48,8 +56,7 @@ public class Product {
 
 
 
-    public Product(String name, double price, Category category, Integer quantity, Brand brand) {
-
+    public Product(String name, double price, Category category, Integer quantity, Brand brand,Store s) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;

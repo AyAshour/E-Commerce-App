@@ -1,5 +1,7 @@
 package com.swe.project.entity;
 
+import com.swe.project.repository.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
@@ -31,13 +33,22 @@ public class User {
             name="user_types",
             joinColumns=@JoinColumn(name="username", referencedColumnName="username"),
             inverseJoinColumns=@JoinColumn(name="userTypeId", referencedColumnName="userTypeId"))
-    private Set<UserType> userTypes;
+    private Set<UserType> userRoles;
 
-    public User(String email, String username, String password, Set<UserType> userTypes) {
+    @ManyToMany
+    private Set<Product> buyProducts;
+
+    @ManyToMany
+    private Set<Product> viewedProducts;
+
+    @OneToMany
+    private Set<Store> stores;
+
+    public User(String email, String username, String password, Set<UserType> userRoles) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.userTypes = userTypes;
+        this.userRoles = userRoles;
         this.cart = null;
     }
 
@@ -45,73 +56,29 @@ public class User {
         this.email = "";
         this.username = "";
         this.password = "";
-        this.userTypes = new HashSet<>();
-        this.cart = null;
     }
 
-   /* @OneToMany
-    public Set<Product> buyProducts;
-
-
-    public Set<User> collaborators;
-*/
-
-
-
-    /*
-    @ManyToMany
-    public Set<Product> viewedProducts;*/
-
-
-
-
-   /* @OneToMany(fetch = FetchType.EAGER, mappedBy = "id", cascade = CascadeType.ALL)
-    private List<UserType> userRoles;
-=======
-
-    public User(String ownerUsername) {
+    public User(String ownerUsername , UserType type) {
         this.username = ownerUsername;
-        this.type = userType.customer.getType();
+        userRoles = new HashSet<>();
+        userRoles.add(type);
         this.email = "";
-        this.username = "";
         this.password = "";
-    }
-
-    public static enum userType {
-        admin("admin"), customer("customer"), storeOwner("owner");
-        public String type;
-
-        userType(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public static userType parse(String type) {
-            for (userType type1 : userType.values()) {
-                if (type1.type == type) {
-                    return type1;
-                }
-            }
-            return null;
-        }
+        cart = new Cart(this,null);
     }
 
 
-    public List<UserType> getUserRoles() {
+    public Set<UserType> getUserRoles() {
+        if(this.userRoles == null) {
+            this.userRoles = new HashSet<UserType>();
+        }
         return userRoles;
     }
 
 
-    public void setUserRoles(List<UserType> userRoles) {
+    public void setUserRoles(Set<UserType> userRoles) {
         this.userRoles = userRoles;
-    }*/
+    }
 
     public String getUsername() {
         return username;
@@ -119,14 +86,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Set<UserType> getUserTypes() {
-        return this.userTypes;
-    }
-
-    public void setUserTypes(Set<UserType> userTypes) {
-        this.userTypes = userTypes;
     }
 
 
@@ -139,22 +98,23 @@ public class User {
     }
 
 
-    /*public Set<Store> getStores() {
-        return stores;
-    }
-
-    public void setStores(Set<Store> stores) {
-        this.stores = stores;
-    }*/
-/*
     public Set<Product> getViewedProducts() {
+        if(this.viewedProducts == null) {
+            this.viewedProducts = new HashSet<Product>();
+        }
         return viewedProducts;
     }
 
     public void setViewedProducts(Set<Product> viewedProducts) {
         this.viewedProducts = viewedProducts;
     }
-*/
+
+    public void addViewedProduct(Product p) {
+        if(this.viewedProducts == null) {
+            this.viewedProducts = new HashSet<Product>();
+        }
+        this.viewedProducts.add(p);
+    }
 
     public String getPassword() {
         return password;
@@ -165,6 +125,9 @@ public class User {
     }
 
     public Cart getCart() {
+        if(this.cart == null) {
+            this.cart = new Cart();
+        }
         return cart;
     }
 
@@ -172,15 +135,24 @@ public class User {
         this.cart = cart;
     }
 
-/*
+
+    private void inintStores() {
+        if(this.stores == null) {
+            this.stores = new HashSet<Store>();
+        }
+    }
     public void addStores(Set<Store> stores) {
+        inintStores();
         this.stores.addAll(stores);
     }
-    public void addCollaborators(Set<User> Collaborators) {
-        this.collaborators(Collaborators);
+
+    public void addStore(Store store) {
+        inintStores();
+        this.stores.add(store);
     }
 
-    private void collaborators(Set<User> collaborators) {
+    public  Set<Store> getStores() {
+        inintStores();
+        return this.stores;
     }
-*/
 }

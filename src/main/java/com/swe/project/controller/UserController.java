@@ -1,12 +1,9 @@
 package com.swe.project.controller;
 
 import com.swe.project.entity.User;
-import com.swe.project.entity.Store;
 import com.swe.project.entity.UserType;
-import com.swe.project.repository.UserRepository;
 import com.swe.project.service.UserService;
 import com.swe.project.service.UserTypeService;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserTypeService userTypeService;
+
+
+
 
     @PostMapping(value = "/register")
     public ResponseEntity<?> register(@RequestBody User user, @RequestParam("type") List<String> userTypesList){
